@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@layer base {
+  button:enabled,
+  [role="button"]:enabled {
+    cursor: pointer;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    @apply outline-2 outline-offset-0 outline-transparent;
+    /* Note that `outline-style` needs the `:focus-visible` pseudo-class to override the `auto` default in Firefox */
+    @apply focus-visible:outline-blue-400 focus-visible:outline-solid;
+  }
+}
+
+@media screen and (update: fast) and (prefers-reduced-motion: no-preference) {
+  :root {
+    @apply scroll-smooth;
+  }
+}
+
+@media not (update: fast) {
+  * {
+    @apply animate-none! transition-none!;
+  }
+}
+
+/* `@theme inline` is required when referencing CSS custom properties */
+/* @see https://tailwindcss.com/docs/theme#referencing-other-variables */
+@theme inline {
+  --font-sans: var(--font-geist);
+}

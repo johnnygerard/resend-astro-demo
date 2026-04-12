@@ -1,0 +1,29 @@
+{
+  "configurations": [
+    {
+      "name": "Launch Chrome",
+      "preLaunchTask": "npm: dev",
+      "request": "launch",
+      "runtimeArgs": [
+        "--auto-open-devtools-for-tabs",
+        "--user-data-dir=${userHome}/.config/google-chrome-vscode"
+      ],
+      "type": "chrome",
+      "url": "http://localhost:4321",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Launch Chrome (Prod)",
+      "preLaunchTask": "npm: preview",
+      "request": "launch",
+      "runtimeArgs": [
+        "--auto-open-devtools-for-tabs",
+        "--user-data-dir=${userHome}/.config/google-chrome-vscode"
+      ],
+      "type": "chrome",
+      "url": "http://localhost:4322",
+      "webRoot": "${workspaceFolder}"
+    }
+  ],
+  "version": "0.2.0"
+}

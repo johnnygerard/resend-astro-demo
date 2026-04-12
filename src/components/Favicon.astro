@@ -1,0 +1,11 @@
+{
+  (["light", "dark"] as const).map((theme) => (
+    <link
+      rel="icon"
+      href={`/assets/images/favicon-${theme}.png`}
+      media={`(prefers-color-scheme: ${theme})`}
+      type="image/png"
+      sizes="32x32"
+    />
+  ))
+}

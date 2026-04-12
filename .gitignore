@@ -1,0 +1,21 @@
+# https://git-scm.com/docs/gitignore
+
+# Node.js dependencies
+/node_modules/
+
+# Astro
+/.astro/
+/dist/
+
+# Wrangler
+/.wrangler/
+# https://developers.cloudflare.com/workers/configuration/environment-variables/#local-development-with-secrets
+/.dev.vars*
+!.dev.vars.example
+
+# Playwright
+/blob-report/
+/playwright-report/
+/playwright/.auth/
+/playwright/.cache/
+/test-results/

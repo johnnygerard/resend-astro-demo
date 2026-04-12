@@ -1,0 +1,16 @@
+name: Format Check
+on:
+  pull_request:
+    branches: [main]
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Initialize environment
+        uses: ./.github/actions/init
+
+      - name: Check code formatting
+        run: npm run format:check

@@ -1,0 +1,55 @@
+{
+  "tasks": [
+    {
+      "isBackground": true,
+      "label": "npm: dev",
+      "problemMatcher": [
+        {
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": {
+              "regexp": "start"
+            },
+            "endsPattern": {
+              "regexp": "ready"
+            }
+          },
+          "pattern": "$tsc"
+        }
+      ],
+      "script": "dev",
+      "type": "npm"
+    },
+    {
+      "group": {
+        "isDefault": true,
+        "kind": "build"
+      },
+      "label": "npm: build",
+      "problemMatcher": [],
+      "script": "build",
+      "type": "npm"
+    },
+    {
+      "isBackground": true,
+      "label": "npm: preview",
+      "problemMatcher": [
+        {
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": {
+              "regexp": "start"
+            },
+            "endsPattern": {
+              "regexp": "ready"
+            }
+          },
+          "pattern": "$tsc"
+        }
+      ],
+      "script": "preview",
+      "type": "npm"
+    }
+  ],
+  "version": "2.0.0"
+}

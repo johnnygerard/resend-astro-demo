@@ -1,0 +1,47 @@
+---
+import { Font } from "astro:assets";
+import Favicon from "~/components/Favicon.astro";
+import "~/styles/globals.css";
+import { tw } from "~/utils/tw";
+
+type Props = {
+  title: string;
+  description: string;
+  indexed?: boolean;
+};
+
+const { title, description, indexed = true } = Astro.props;
+
+const starterStyles = tw(
+  "bg-neutral-950 font-sans text-base text-neutral-100",
+  "selection:bg-neutral-200 selection:text-neutral-900",
+);
+---
+
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <Font cssVariable="--font-geist" preload />
+    <Favicon />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    {
+      /* Bing: https://www.bing.com/webmasters/help/robots-meta-tags-and-attributes-that-bing-supports-5198d240 */
+      /* Google: https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag#directives */
+    }
+    {!indexed && <meta name="robots" content="noindex" />}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+  </head>
+  <body class={starterStyles}>
+    {/* This wrapper prevents a body overflow in mobile browsers. */}
+    <div class="flex min-h-screen flex-col">
+      {/* <Header /> */}
+      <main class="grid flex-1 items-center">
+        <slot />
+      </main>
+      {/* <Footer /> */}
+    </div>
+  </body>
+</html>
