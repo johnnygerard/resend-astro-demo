@@ -1,5 +1,5 @@
 ---
-import { PaperPlaneTiltIcon } from "@phosphor-icons/react";
+import { CheckCircleIcon, PaperPlaneTiltIcon } from "@phosphor-icons/react";
 import { actions } from "astro:actions";
 import { tw } from "~/utils/tw";
 
@@ -16,77 +16,106 @@ const inputStyles = tw(
   "text-sm text-neutral-100 placeholder:text-neutral-500",
   "transition-colors hover:border-neutral-600 focus-visible:border-transparent",
 );
+
+const result = Astro.getActionResult(actions.send);
+const showSuccessMessage = Boolean(result?.data);
 ---
 
-<form
-  action={actions.send}
+<div
   class={tw(
     "mx-auto w-full max-w-lg bg-neutral-900/70 p-8 backdrop-blur-sm",
-    "rounded-2xl border border-neutral-800 shadow-xl",
+    "relative rounded-2xl border border-neutral-800 shadow-xl",
     className,
   )}
-  method="post"
-  name="contact"
 >
-  <h2 class="mb-6 text-xl font-semibold text-neutral-100">Contact Us</h2>
-
-  <div class="flex flex-col gap-5">
-    {/* Name Field */}
-    <div class={fieldStyles}>
-      <label class={labelStyles} for="contact-name">Name</label>
-      <input
-        autocomplete="name"
-        class={inputStyles}
-        id="contact-name"
-        maxlength={255}
-        minlength={1}
-        name="name"
-        placeholder="e.g. John Smith"
-        required
-        spellcheck="false"
-        type="text"
-      />
-    </div>
-
-    {/* Email Field */}
-    <div class={fieldStyles}>
-      <label class={labelStyles} for="contact-email">Email</label>
-      <input
-        autocomplete="email"
-        class={inputStyles}
-        id="contact-email"
-        name="email"
-        placeholder="e.g. smith@example.com"
-        required
-        spellcheck="false"
-        type="email"
-      />
-    </div>
-
-    {/* Message Field */}
-    <div class={fieldStyles}>
-      <label class={labelStyles} for="contact-message">Message</label>
-      <textarea
-        class={tw(inputStyles, "min-h-32 resize-y")}
-        id="contact-message"
-        maxlength={5000}
-        minlength={10}
-        name="message"
-        placeholder="Your message here..."
-        required></textarea>
-    </div>
-
-    {/* Submit Button */}
-    <button
-      class={tw(
-        "mt-1 inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5",
-        "text-sm font-semibold text-neutral-900",
-        "bg-neutral-100 transition hover:bg-white active:scale-[0.98]",
-      )}
-      type="submit"
-    >
-      <span>Send Message</span>
-      <PaperPlaneTiltIcon aria-hidden className="size-4.5" weight="fill" />
-    </button>
+  {/* Success Message */}
+  <div
+    class={tw(
+      "absolute inset-0 grid place-content-center text-center",
+      "transition-opacity duration-300",
+      !showSuccessMessage && "invisible opacity-0",
+    )}
+  >
+    <CheckCircleIcon
+      aria-hidden
+      className="mx-auto size-12 text-green-400"
+      weight="duotone"
+    />
+    <h2 class="mt-4 text-xl font-semibold text-neutral-100">Message Sent!</h2>
+    <p class="mt-1.5 text-sm text-neutral-400">
+      Thanks for reaching out. We'll get back to you as soon as possible.
+    </p>
   </div>
-</form>
+
+  <form
+    action={actions.send}
+    class={tw(
+      showSuccessMessage && "invisible opacity-0",
+      "transition-opacity duration-300",
+    )}
+    method="post"
+    name="contact"
+  >
+    <h2 class="mb-6 text-xl font-semibold text-neutral-100">Contact Us</h2>
+
+    <div class="flex flex-col gap-5">
+      {/* Name Field */}
+      <div class={fieldStyles}>
+        <label class={labelStyles} for="contact-name"> Name </label>
+        <input
+          autocomplete="name"
+          class={inputStyles}
+          id="contact-name"
+          maxlength={255}
+          minlength={1}
+          name="name"
+          placeholder="e.g. John Smith"
+          required
+          spellcheck="false"
+          type="text"
+        />
+      </div>
+
+      {/* Email Field */}
+      <div class={fieldStyles}>
+        <label class={labelStyles} for="contact-email"> Email </label>
+        <input
+          autocomplete="email"
+          class={inputStyles}
+          id="contact-email"
+          name="email"
+          placeholder="e.g. smith@example.com"
+          required
+          spellcheck="false"
+          type="email"
+        />
+      </div>
+
+      {/* Message Field */}
+      <div class={fieldStyles}>
+        <label class={labelStyles} for="contact-message"> Message </label>
+        <textarea
+          class={tw(inputStyles, "min-h-32 resize-y")}
+          id="contact-message"
+          maxlength={5000}
+          minlength={10}
+          name="message"
+          placeholder="Your message here..."
+          required></textarea>
+      </div>
+
+      {/* Submit Button */}
+      <button
+        class={tw(
+          "mt-1 inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5",
+          "text-sm font-semibold text-neutral-900",
+          "bg-neutral-100 transition hover:bg-white active:scale-[0.98]",
+        )}
+        type="submit"
+      >
+        <span>Send Message</span>
+        <PaperPlaneTiltIcon aria-hidden className="size-4.5" weight="fill" />
+      </button>
+    </div>
+  </form>
+</div>
