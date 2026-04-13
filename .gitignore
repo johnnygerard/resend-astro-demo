@@ -19,3 +19,7 @@
 /playwright/.auth/
 /playwright/.cache/
 /test-results/
+
+# Environment files (https://vite.dev/guide/env-and-mode.html#env-files)
+/.env.local
+/.env.*.local
