@@ -1,0 +1,88 @@
+---
+import { actions } from "astro:actions";
+import { tw } from "~/utils/tw";
+
+type Props = {
+  class?: string;
+};
+
+const { class: className } = Astro.props;
+
+const fieldStyles = tw("flex flex-col gap-1.5");
+const labelStyles = tw("text-sm font-medium text-neutral-300");
+const inputStyles = tw(
+  "rounded-lg border border-neutral-700 bg-neutral-800 px-3.5 py-2.5",
+  "text-sm text-neutral-100 placeholder:text-neutral-500",
+  "transition-colors hover:border-neutral-600 focus-visible:border-transparent",
+);
+---
+
+<form
+  action={actions.send}
+  class={tw(
+    "mx-auto w-full max-w-lg bg-neutral-900/70 p-8 backdrop-blur-sm",
+    "rounded-2xl border border-neutral-800 shadow-xl",
+    className,
+  )}
+  method="post"
+  name="contact"
+>
+  <h2 class="mb-6 text-xl font-semibold text-neutral-100">Contact Us</h2>
+
+  <div class="flex flex-col gap-5">
+    {/* Name Field */}
+    <div class={fieldStyles}>
+      <label class={labelStyles} for="contact-name">Name</label>
+      <input
+        autocomplete="name"
+        class={inputStyles}
+        id="contact-name"
+        maxlength={255}
+        minlength={1}
+        name="name"
+        placeholder="e.g. John Smith"
+        required
+        spellcheck="false"
+        type="text"
+      />
+    </div>
+
+    {/* Email Field */}
+    <div class={fieldStyles}>
+      <label class={labelStyles} for="contact-email">Email</label>
+      <input
+        autocomplete="email"
+        class={inputStyles}
+        id="contact-email"
+        name="email"
+        placeholder="e.g. smith@example.com"
+        required
+        spellcheck="false"
+        type="email"
+      />
+    </div>
+
+    {/* Message Field */}
+    <div class={fieldStyles}>
+      <label class={labelStyles} for="contact-message">Message</label>
+      <textarea
+        class={tw(inputStyles, "min-h-32 resize-y")}
+        id="contact-message"
+        maxlength={5000}
+        minlength={10}
+        name="message"
+        placeholder="Your message here..."
+        required></textarea>
+    </div>
+
+    {/* Submit Button */}
+    <button
+      class={tw(
+        "mt-1 rounded-lg px-5 py-2.5",
+        "text-sm font-semibold text-neutral-900",
+        "bg-neutral-100 transition hover:bg-white active:scale-[0.98]",
+      )}
+      type="submit">Send Message</button
+    >
+  </div>
+</form>

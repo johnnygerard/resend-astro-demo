@@ -1,10 +1,11 @@
 ---
+import ContactForm from "~/components/ContactForm.astro";
 import Layout from "~/layouts/Layout.astro";
-
-export const prerender = true;
 ---
 
 <Layout
   title="Astro 6 Starter"
   description="A lightweight Astro 6 starter with Tailwind CSS 4 and a production-ready Cloudflare Workers setup."
-/>
+>
+  <ContactForm />
+</Layout>
