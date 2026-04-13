@@ -30,6 +30,7 @@ export default defineConfig({
     },
   ],
   integrations: [sitemap()],
+  output: "server",
   site: "https://resend-astro-demo.mail-25a.workers.dev",
   trailingSlash: "never",
   vite: {
