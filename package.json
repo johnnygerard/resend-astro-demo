@@ -1,11 +1,12 @@
 {
   "dependencies": {
     "@astrojs/check": "^0.9.8",
-    "@astrojs/cloudflare": "^13.1.7",
+    "@astrojs/cloudflare": "^13.1.8",
     "@astrojs/sitemap": "^3.7.2",
     "@tailwindcss/vite": "^4.2.2",
-    "astro": "^6.1.3",
+    "astro": "^6.1.5",
     "clsx": "^2.1.1",
+    "resend": "^6.10.0",
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
@@ -15,15 +16,15 @@
     "@playwright/test": "^1.59.1",
     "@types/node": "^24.12.2",
     "eslint": "^10.2.0",
-    "globals": "^17.4.0",
-    "prettier": "^3.8.1",
+    "globals": "^17.5.0",
+    "prettier": "^3.8.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.58.0",
+    "typescript-eslint": "^8.58.1",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.1.2",
-    "wrangler": "^4.80.0"
+    "vitest": "^4.1.4",
+    "wrangler": "^4.81.1"
   },
   "devEngines": {
     "packageManager": {
@@ -41,7 +42,7 @@
     "node": "24",
     "npm": "11"
   },
-  "name": "starter-astro-6",
+  "name": "resend-astro-demo",
   "private": true,
   "scripts": {
     "astro": "astro",
