@@ -1,4 +1,5 @@
 import cloudflare from "@astrojs/cloudflare";
+import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField, fontProviders } from "astro/config";
@@ -29,7 +30,7 @@ export default defineConfig({
       weights: ["100 900"],
     },
   ],
-  integrations: [sitemap()],
+  integrations: [react(), sitemap()],
   output: "server",
   site: "https://resend-astro-demo.mail-25a.workers.dev",
   trailingSlash: "never",
