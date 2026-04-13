@@ -1,13 +1,21 @@
 import cloudflare from "@astrojs/cloudflare";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig, fontProviders } from "astro/config";
+import { defineConfig, envField, fontProviders } from "astro/config";
 
 // https://docs.astro.build/en/reference/configuration-reference/
 export default defineConfig({
   adapter: cloudflare(),
   build: {
     format: "file",
+  },
+  env: {
+    schema: {
+      RESEND_API_KEY: envField.string({
+        access: "secret",
+        context: "server",
+      }),
+    },
   },
   fonts: [
     // Geist: sans-serif typeface
