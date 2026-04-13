@@ -41,7 +41,7 @@
     "node": "24",
     "npm": "11"
   },
-  "name": "starter-astro-6",
+  "name": "resend-astro-demo",
   "private": true,
   "scripts": {
     "astro": "astro",
