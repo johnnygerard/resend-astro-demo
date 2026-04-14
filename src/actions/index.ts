@@ -1,7 +1,8 @@
+import { v4 as uuid } from "@lukeed/uuid";
 import { z } from "astro/zod";
 import { ActionError, defineAction } from "astro:actions";
 import { RESEND_API_KEY } from "astro:env/server";
-import { Resend } from "resend";
+import { Resend, type CreateEmailResponseSuccess } from "resend";
 import {
   EMAIL_MAX_LENGTH,
   MESSAGE_MAX_LENGTH,
@@ -16,6 +17,7 @@ export const server = {
   send: defineAction({
     accept: "form",
     input: z.object({
+      website: z.string().optional(),
       name: z
         .string()
         .min(1, validationMessages.name.valueMissing)
@@ -31,6 +33,11 @@ export const server = {
         .max(MESSAGE_MAX_LENGTH, validationMessages.message.tooLong),
     }),
     handler: async (input) => {
+      if (input.website?.length) {
+        console.log("Received non-empty honeypot field.");
+        return { id: uuid() } as CreateEmailResponseSuccess;
+      }
+
       const { data, error } = await resend.emails.send({
         from: `John <noreply@resend.jgerard.dev>`,
         to: "delivered@resend.dev", // @see https://resend.com/docs/dashboard/emails/send-test-emails
