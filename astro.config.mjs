@@ -16,6 +16,11 @@ export default defineConfig({
         access: "secret",
         context: "server",
       }),
+      TARGET_EMAIL: envField.string({
+        access: "secret",
+        context: "server",
+        default: "delivered@resend.dev", // @see https://resend.com/docs/dashboard/emails/send-test-emails
+      }),
     },
   },
   fonts: [

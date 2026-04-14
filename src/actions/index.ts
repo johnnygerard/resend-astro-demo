@@ -1,7 +1,7 @@
 import { v4 as uuid } from "@lukeed/uuid";
 import { z } from "astro/zod";
 import { ActionError, defineAction } from "astro:actions";
-import { RESEND_API_KEY } from "astro:env/server";
+import { RESEND_API_KEY, TARGET_EMAIL } from "astro:env/server";
 import { Resend, type CreateEmailResponseSuccess } from "resend";
 import {
   EMAIL_MAX_LENGTH,
@@ -40,7 +40,7 @@ export const server = {
 
       const { data, error } = await resend.emails.send({
         from: `John <hello@resend.jgerard.dev>`,
-        to: "delivered@resend.dev", // @see https://resend.com/docs/dashboard/emails/send-test-emails
+        to: TARGET_EMAIL,
         subject: `New message from ${input.name} (${input.email})`,
         text: input.message,
       });
