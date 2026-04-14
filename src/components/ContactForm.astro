@@ -1,7 +1,17 @@
 ---
-import { CheckCircleIcon, PaperPlaneTiltIcon } from "@phosphor-icons/react";
-import { actions } from "astro:actions";
+import {
+  CheckCircleIcon,
+  CircleNotchIcon,
+  PaperPlaneTiltIcon,
+  WarningCircleIcon,
+} from "@phosphor-icons/react";
 import { tw } from "~/utils/tw";
+import {
+  EMAIL_MAX_LENGTH,
+  MESSAGE_MAX_LENGTH,
+  NAME_MAX_LENGTH,
+  validationMessages,
+} from "~/validation/messages";
 
 type Props = {
   class?: string;
@@ -11,14 +21,16 @@ const { class: className } = Astro.props;
 
 const fieldStyles = tw("flex flex-col gap-1.5");
 const labelStyles = tw("text-sm font-medium text-neutral-300");
-const inputStyles = tw(
-  "rounded-lg border border-neutral-700 bg-neutral-800 px-3.5 py-2.5",
-  "text-sm text-neutral-100 placeholder:text-neutral-500",
-  "transition-colors hover:border-neutral-600 focus-visible:border-transparent",
+const errorStyles = tw(
+  "min-h-lh text-sm text-red-400",
+  "not-peer-user-invalid:invisible not-peer-user-invalid:opacity-0",
 );
-
-const result = Astro.getActionResult(actions.send);
-const showSuccessMessage = Boolean(result?.data);
+const inputStyles = tw(
+  "peer rounded-lg border border-neutral-700 bg-neutral-800 px-3.5 py-2.5",
+  "text-sm text-neutral-100 placeholder:text-neutral-500",
+  "transition-colors hover:not-user-invalid:border-neutral-500",
+  "user-invalid:border-red-500 user-invalid:focus-visible:outline-red-400",
+);
 ---
 
 <div
@@ -32,9 +44,9 @@ const showSuccessMessage = Boolean(result?.data);
   <div
     class={tw(
       "absolute inset-0 grid place-content-center text-center",
-      "transition-opacity duration-300",
-      !showSuccessMessage && "invisible opacity-0",
+      "invisible opacity-0 transition-opacity duration-300",
     )}
+    id="contact-success"
   >
     <CheckCircleIcon
       aria-hidden
@@ -47,15 +59,7 @@ const showSuccessMessage = Boolean(result?.data);
     </p>
   </div>
 
-  <form
-    action={actions.send}
-    class={tw(
-      showSuccessMessage && "invisible opacity-0",
-      "transition-opacity duration-300",
-    )}
-    method="post"
-    name="contact"
-  >
+  <form class="transition-opacity duration-300" name="contact" novalidate>
     <h2 class="mb-6 text-xl font-semibold text-neutral-100">Contact Us</h2>
 
     <div class="flex flex-col gap-5">
@@ -63,59 +67,264 @@ const showSuccessMessage = Boolean(result?.data);
       <div class={fieldStyles}>
         <label class={labelStyles} for="contact-name">Name</label>
         <input
+          aria-describedby="contact-name-error"
           autocomplete="name"
           class={inputStyles}
           id="contact-name"
-          maxlength={255}
-          minlength={1}
+          maxlength={NAME_MAX_LENGTH}
           name="name"
           placeholder="e.g. John Smith"
           required
           spellcheck="false"
           type="text"
         />
+        <p class={errorStyles} id="contact-name-error">
+          {validationMessages.name.valueMissing}
+        </p>
       </div>
 
       {/* Email Field */}
       <div class={fieldStyles}>
         <label class={labelStyles} for="contact-email">Email</label>
         <input
+          aria-describedby="contact-email-error"
           autocomplete="email"
           class={inputStyles}
           id="contact-email"
+          maxlength={EMAIL_MAX_LENGTH}
           name="email"
           placeholder="e.g. smith@example.com"
           required
           spellcheck="false"
           type="email"
         />
+        <p class={errorStyles} id="contact-email-error">
+          {validationMessages.email.valueMissing}
+        </p>
       </div>
 
       {/* Message Field */}
       <div class={fieldStyles}>
         <label class={labelStyles} for="contact-message">Message</label>
         <textarea
-          class={tw(inputStyles, "min-h-32 resize-y")}
+          aria-describedby="contact-message-error"
+          class={tw(
+            inputStyles,
+            "field-sizing-content min-h-[calc(6lh+1.25rem+2px)]",
+            "resize-y supports-[field-sizing:content]:resize-none",
+          )}
           id="contact-message"
-          maxlength={5000}
-          minlength={10}
+          maxlength={MESSAGE_MAX_LENGTH}
           name="message"
-          placeholder="Your message here..."
+          placeholder="Tell us what's on your mind..."
           required></textarea>
+        <p class={errorStyles} id="contact-message-error">
+          {validationMessages.message.valueMissing}
+        </p>
+      </div>
+
+      {/* Server Error Banner */}
+      <div
+        class={tw(
+          "flex items-center gap-2 rounded-lg border border-red-500/30",
+          "bg-red-500/10 px-4 py-3 text-sm text-red-400",
+          "invisible opacity-0 transition-opacity duration-300",
+        )}
+        id="contact-server-error"
+        role="alert"
+      >
+        <WarningCircleIcon
+          aria-hidden
+          className="size-5 shrink-0"
+          weight="fill"
+        />
+        <p id="contact-server-error-message">
+          Something went wrong. Please try again later.
+        </p>
       </div>
 
       {/* Submit Button */}
       <button
         class={tw(
-          "mt-1 inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5",
+          "group mt-1 inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5",
           "text-sm font-semibold text-neutral-900",
           "bg-neutral-100 transition hover:bg-white active:scale-[0.98]",
         )}
         type="submit"
       >
-        <span>Send Message</span>
-        <PaperPlaneTiltIcon aria-hidden className="size-4.5" weight="fill" />
+        {/* Idle State */}
+        <span class="group-aria-disabled:hidden">Send Message</span>
+        <PaperPlaneTiltIcon
+          aria-hidden
+          className="size-4.5 group-aria-disabled:hidden"
+          weight="fill"
+        />
+
+        {/* Pending State */}
+        <span class="not-group-aria-disabled:hidden">Sending...</span>
+        <CircleNotchIcon
+          aria-hidden
+          className="size-4.5 animate-spin not-group-aria-disabled:hidden"
+          weight="bold"
+        />
       </button>
     </div>
   </form>
 </div>
+
+<script>
+  import { actions, isInputError } from "astro:actions";
+  import { throwIfNull } from "~/utils/throw-if-null";
+  import { validationMessages } from "~/validation/messages";
+
+  try {
+    const form = throwIfNull(document.forms.namedItem("contact"));
+
+    const submitButton = throwIfNull(
+      form.querySelector<HTMLButtonElement>('button[type="submit"]'),
+    );
+    const serverError = throwIfNull(
+      document.getElementById("contact-server-error"),
+    );
+    const serverErrorMessage = throwIfNull(
+      document.getElementById("contact-server-error-message"),
+    );
+
+    const successMessage = throwIfNull(
+      document.getElementById("contact-success"),
+    );
+
+    const nameInput = throwIfNull(document.getElementById("contact-name"));
+    const emailInput = throwIfNull(document.getElementById("contact-email"));
+    const messageInput = throwIfNull(
+      document.getElementById("contact-message"),
+    );
+
+    if (!(nameInput instanceof HTMLInputElement))
+      throw new Error("Name input is not an HTMLInputElement");
+    if (!(emailInput instanceof HTMLInputElement))
+      throw new Error("Email input is not an HTMLInputElement");
+    if (!(messageInput instanceof HTMLTextAreaElement))
+      throw new Error("Message input is not an HTMLTextAreaElement");
+
+    const nameError = throwIfNull(
+      document.getElementById("contact-name-error"),
+    );
+    const emailError = throwIfNull(
+      document.getElementById("contact-email-error"),
+    );
+    const messageError = throwIfNull(
+      document.getElementById("contact-message-error"),
+    );
+
+    const setNameError = (message: string): void => {
+      nameError.textContent = message;
+      nameInput.setCustomValidity(message);
+    };
+
+    const setEmailError = (message: string): void => {
+      emailError.textContent = message;
+      emailInput.setCustomValidity(message);
+    };
+
+    const setMessageError = (message: string): void => {
+      messageError.textContent = message;
+      messageInput.setCustomValidity(message);
+    };
+
+    nameInput.addEventListener("input", () => {
+      const { validity } = nameInput;
+
+      switch (true) {
+        case validity.valueMissing:
+          setNameError(validationMessages.name.valueMissing);
+          break;
+        case validity.tooLong:
+          setNameError(validationMessages.name.tooLong);
+          break;
+        default:
+          setNameError("");
+      }
+    });
+
+    emailInput.addEventListener("input", () => {
+      const { validity } = emailInput;
+
+      switch (true) {
+        case validity.valueMissing:
+          setEmailError(validationMessages.email.valueMissing);
+          break;
+        case validity.tooLong:
+          setEmailError(validationMessages.email.tooLong);
+          break;
+        case validity.typeMismatch:
+          setEmailError(validationMessages.email.typeMismatch);
+          break;
+        default:
+          setEmailError("");
+      }
+    });
+
+    messageInput.addEventListener("input", () => {
+      const { validity } = messageInput;
+
+      switch (true) {
+        case validity.valueMissing:
+          setMessageError(validationMessages.message.valueMissing);
+          break;
+        case validity.tooLong:
+          setMessageError(validationMessages.message.tooLong);
+          break;
+        default:
+          setMessageError("");
+      }
+    });
+
+    form.addEventListener("submit", async (event): Promise<void> => {
+      event.preventDefault();
+      if (!form.checkValidity()) return; // Prevent invalid submissions
+      if (submitButton.ariaDisabled === "true") return; // Prevent duplicate submissions
+
+      submitButton.ariaDisabled = "true";
+      serverError.classList.add("invisible", "opacity-0");
+      const formData = new FormData(form);
+      const response = await actions.send(formData);
+
+      if (isInputError(response.error)) {
+        const { name, email, message } = response.error.fields;
+
+        if (name?.[0]) {
+          setNameError(name.join(" "));
+          nameInput.focus();
+        }
+
+        if (email?.[0]) {
+          setEmailError(email.join(" "));
+          emailInput.focus();
+        }
+
+        if (message?.[0]) {
+          setMessageError(message.join(" "));
+          messageInput.focus();
+        }
+
+        submitButton.ariaDisabled = "false";
+        return;
+      }
+
+      if (response.error) {
+        console.error(response.error);
+        serverErrorMessage.textContent = response.error.message;
+        serverError.classList.remove("invisible", "opacity-0");
+        submitButton.ariaDisabled = "false";
+        return;
+      }
+
+      // Show success message and hide form
+      form.classList.add("invisible", "opacity-0");
+      successMessage.classList.remove("invisible", "opacity-0");
+    });
+  } catch (error) {
+    console.error("Failed to initialize contact form:", error);
+  }
+</script>

@@ -2,6 +2,12 @@ import { z } from "astro/zod";
 import { ActionError, defineAction } from "astro:actions";
 import { RESEND_API_KEY } from "astro:env/server";
 import { Resend } from "resend";
+import {
+  EMAIL_MAX_LENGTH,
+  MESSAGE_MAX_LENGTH,
+  NAME_MAX_LENGTH,
+  validationMessages,
+} from "~/validation/messages";
 
 const resend = new Resend(RESEND_API_KEY);
 
@@ -10,9 +16,19 @@ export const server = {
   send: defineAction({
     accept: "form",
     input: z.object({
-      name: z.string().trim().min(1).max(255),
-      email: z.email(),
-      message: z.string().trim().min(10).max(5000),
+      name: z
+        .string()
+        .min(1, validationMessages.name.valueMissing)
+        .max(NAME_MAX_LENGTH, validationMessages.name.tooLong),
+      email: z
+        .string()
+        .min(1, validationMessages.email.valueMissing)
+        .max(EMAIL_MAX_LENGTH, validationMessages.email.tooLong)
+        .and(z.email(validationMessages.email.typeMismatch)),
+      message: z
+        .string()
+        .min(1, validationMessages.message.valueMissing)
+        .max(MESSAGE_MAX_LENGTH, validationMessages.message.tooLong),
     }),
     handler: async (input) => {
       const { data, error } = await resend.emails.send({
