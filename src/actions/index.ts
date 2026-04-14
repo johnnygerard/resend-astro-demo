@@ -39,7 +39,7 @@ export const server = {
       }
 
       const { data, error } = await resend.emails.send({
-        from: `John <noreply@resend.jgerard.dev>`,
+        from: `John <hello@resend.jgerard.dev>`,
         to: "delivered@resend.dev", // @see https://resend.com/docs/dashboard/emails/send-test-emails
         subject: `New message from ${input.name} (${input.email})`,
         text: input.message,
