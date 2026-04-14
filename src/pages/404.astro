@@ -1,5 +1,6 @@
 ---
 import Layout from "~/layouts/Layout.astro";
+import { tw } from "~/utils/tw";
 
 export const prerender = true;
 
@@ -8,15 +9,26 @@ const DESCRIPTION =
 ---
 
 <Layout title="404 – Page Not Found" description={DESCRIPTION} indexed={false}>
-  <div>
-    <hgroup>
-      <p>404 Error</p>
-      <h1>Page Not Found</h1>
+  <div class="mx-auto w-full max-w-lg text-center">
+    <hgroup class="mb-4">
+      <p class="text-sm font-medium tracking-widest text-neutral-400 uppercase">
+        404 Error
+      </p>
+      <h1 class="mt-2 text-4xl font-bold text-neutral-100">Page Not Found</h1>
     </hgroup>
-    <p>{DESCRIPTION}</p>
+    <p class="text-neutral-400">{DESCRIPTION}</p>
 
-    <div>
-      <a href="/"> Back to Home </a>
+    <div class="mt-8">
+      <a
+        href="/"
+        class={tw(
+          "inline-flex items-center justify-center rounded-lg px-5 py-2.5",
+          "text-sm font-semibold text-neutral-900",
+          "bg-neutral-100 transition hover:bg-white active:scale-[0.98]",
+        )}
+      >
+        Back to Home
+      </a>
     </div>
   </div>
 </Layout>
