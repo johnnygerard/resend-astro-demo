@@ -2,6 +2,8 @@
 import ContactForm from "~/components/ContactForm.astro";
 import Layout from "~/layouts/Layout.astro";
 
+export const prerender = true;
+
 const title = "Astro & Resend Integration";
 const description =
   "A functional contact form demonstrating serverless email delivery utilizing Astro, Resend, and Cloudflare Workers.";
