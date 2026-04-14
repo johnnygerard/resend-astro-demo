@@ -22,12 +22,11 @@ export const server = {
         text: input.message,
       });
 
-      if (error) {
+      if (error)
         throw new ActionError({
-          code: "BAD_REQUEST",
-          message: error.message,
+          code: ActionError.statusToCode(error.statusCode ?? 0),
+          message: `Failed to send email (type: ${error.name}, status: ${error.statusCode}): ${error.message}`,
         });
-      }
 
       return data;
     },
