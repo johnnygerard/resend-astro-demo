@@ -12,6 +12,7 @@ import {
   NAME_MAX_LENGTH,
   validationMessages,
 } from "~/validation/messages";
+import ExternalLink from "~/components/ExternalLink.astro";
 
 type Props = {
   class?: string;
@@ -59,8 +60,22 @@ const inputStyles = tw(
     </p>
   </div>
 
+  <noscript>
+    <div class="absolute inset-0 grid place-content-center p-8">
+      <p class={tw("text-center text-sm text-pretty text-neutral-400")}>
+        This contact form requires JavaScript to operate. Please ensure that it
+        is supported and enabled in your browser settings. To learn more, check
+        out <ExternalLink
+          class="underline"
+          href="https://www.enable-javascript.com/"
+          >How to enable JavaScript in your browser</ExternalLink
+        >.
+      </p>
+    </div>
+  </noscript>
+
   <form
-    class="group/form transition-opacity duration-300"
+    class="group/form transition-opacity duration-300 noscript:invisible"
     name="contact"
     novalidate
   >
