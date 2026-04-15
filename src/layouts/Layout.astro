@@ -7,10 +7,16 @@ import { tw } from "~/utils/tw";
 type Props = {
   title: string;
   description: string;
+  turnstileEnabled?: boolean;
   indexed?: boolean;
 };
 
-const { title, description, indexed = true } = Astro.props;
+const {
+  title,
+  description,
+  turnstileEnabled = false,
+  indexed = true,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -18,6 +24,16 @@ const { title, description, indexed = true } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <Font cssVariable="--font-geist" preload />
+    {
+      turnstileEnabled && (
+        <script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          async
+          defer
+          is:inline
+        />
+      )
+    }
     <Favicon />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />

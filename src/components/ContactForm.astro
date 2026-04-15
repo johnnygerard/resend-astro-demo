@@ -5,6 +5,7 @@ import {
   PaperPlaneTiltIcon,
   WarningCircleIcon,
 } from "@phosphor-icons/react";
+import { CF_TURNSTILE_SITE_KEY } from "astro:env/client";
 import { tw } from "~/utils/tw";
 import {
   EMAIL_MAX_LENGTH,
@@ -36,7 +37,7 @@ const inputStyles = tw(
 
 <div
   class={tw(
-    "w-full bg-neutral-900/70 p-8 backdrop-blur-sm",
+    "w-full bg-neutral-900/70 p-4 backdrop-blur-sm sm:p-8",
     "relative rounded-2xl border border-neutral-800 shadow-xl",
     className,
   )}
@@ -174,36 +175,54 @@ const inputStyles = tw(
         </p>
       </div>
 
-      {/* Submit Button */}
-      <button
-        class={tw(
-          "group mt-1 inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5",
-          "text-sm font-semibold text-neutral-900",
-          "bg-neutral-100 transition hover:bg-white group-valid/form:active:scale-[0.98]",
-          "data-[state=pending]:cursor-wait data-[state=pending]:opacity-80",
-          "group-invalid/form:cursor-not-allowed",
-          "group-invalid/form:opacity-80",
-          "group-invalid/form:hover:bg-red-300",
-        )}
-        data-state="idle"
-        type="submit"
-      >
-        {/* Idle State */}
-        <span class="not-group-data-[state=idle]:hidden">Send message</span>
-        <PaperPlaneTiltIcon
-          aria-hidden
-          className="size-4.5 not-group-data-[state=idle]:hidden"
-          weight="fill"
-        />
+      <div class="space-y-4">
+        {/* Submit Button */}
+        <button
+          class={tw(
+            "group inline-flex w-full items-center justify-center gap-2 rounded-lg px-5 py-2.5",
+            "text-sm font-semibold text-neutral-900",
+            "bg-neutral-100 transition hover:bg-white group-valid/form:active:scale-[0.98]",
+            "data-[state=pending]:cursor-wait data-[state=pending]:opacity-80",
+            "group-invalid/form:cursor-not-allowed",
+            "group-invalid/form:opacity-80",
+            "group-invalid/form:hover:bg-red-300",
+          )}
+          data-state="idle"
+          type="submit"
+        >
+          {/* Idle State */}
+          <span class="not-group-data-[state=idle]:hidden">Send message</span>
+          <PaperPlaneTiltIcon
+            aria-hidden
+            className="size-4.5 not-group-data-[state=idle]:hidden"
+            weight="fill"
+          />
+          {/* Pending State */}
+          <span class="not-group-data-[state=pending]:hidden">Sending...</span>
+          <CircleNotchIcon
+            aria-hidden
+            className="size-4.5 animate-spin not-group-data-[state=pending]:hidden"
+            weight="bold"
+          />
+        </button>
 
-        {/* Pending State */}
-        <span class="not-group-data-[state=pending]:hidden">Sending...</span>
-        <CircleNotchIcon
-          aria-hidden
-          className="size-4.5 animate-spin not-group-data-[state=pending]:hidden"
-          weight="bold"
-        />
-      </button>
+        {
+          /**
+           * Cloudflare Turnstile Widget
+           * @see https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/
+           */
+        }
+        <div
+          class="cf-turnstile"
+          data-appearance="always"
+          data-language="en-us"
+          data-sitekey={CF_TURNSTILE_SITE_KEY}
+          data-size="flexible"
+          data-theme="dark"
+          style="height: 65px;"
+        >
+        </div>
+      </div>
     </div>
   </form>
 </div>

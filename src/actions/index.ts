@@ -1,7 +1,11 @@
 import { v4 as uuid } from "@lukeed/uuid";
 import { z } from "astro/zod";
 import { ActionError, defineAction } from "astro:actions";
-import { RESEND_API_KEY, TARGET_EMAIL } from "astro:env/server";
+import {
+  CF_TURNSTILE_SECRET_KEY,
+  RESEND_API_KEY,
+  TARGET_EMAIL,
+} from "astro:env/server";
 import { Resend, type CreateEmailResponseSuccess } from "resend";
 import {
   EMAIL_MAX_LENGTH,
@@ -34,11 +38,50 @@ export const server = {
         .trim()
         .min(1, validationMessages.message.valueMissing)
         .max(MESSAGE_MAX_LENGTH, validationMessages.message.tooLong),
+      "cf-turnstile-response": z
+        .string()
+        .min(1, "Turnstile verification is required."),
     }),
     handler: async (input) => {
       if (input.website?.length) {
         console.log("Received non-empty honeypot field.");
         return { id: uuid() } as CreateEmailResponseSuccess;
+      }
+
+      // Validate Turnstile token with Siteverify API (https://developers.cloudflare.com/turnstile/get-started/server-side-validation/)
+      const siteverifyResponse = await fetch(
+        "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            secret: CF_TURNSTILE_SECRET_KEY,
+            response: input["cf-turnstile-response"],
+          }),
+        },
+      );
+
+      if (!siteverifyResponse.ok) {
+        console.error(
+          "Siteverify API request failed with status:",
+          siteverifyResponse.status,
+        );
+        throw new ActionError({
+          code: "INTERNAL_SERVER_ERROR",
+          message:
+            "An unexpected error occurred during CAPTCHA verification. Please try again.",
+        });
+      }
+
+      const siteverifyResult = z
+        .looseObject({ success: z.boolean() })
+        .parse(await siteverifyResponse.json());
+
+      if (!siteverifyResult.success) {
+        throw new ActionError({
+          code: "FORBIDDEN",
+          message: "CAPTCHA verification failed. Please try again.",
+        });
       }
 
       const { data, error } = await resend.emails.send({
