@@ -1,4 +1,10 @@
 ---
+import {
+  CloudIcon,
+  EnvelopeSimpleIcon,
+  PaletteIcon,
+  ShieldCheckIcon,
+} from "@phosphor-icons/react";
 import ContactForm from "~/components/ContactForm.astro";
 import Layout from "~/layouts/Layout.astro";
 import { tw } from "~/utils/tw";
@@ -7,7 +13,30 @@ export const prerender = true;
 
 const title = "Astro & Resend Integration";
 const description =
-  "A functional contact form demonstrating serverless email delivery utilizing Astro, Resend, and Cloudflare Workers.";
+  "A production-ready contact form built for serverless email delivery using Astro, Resend, and Cloudflare Workers.";
+
+const features = [
+  {
+    icon: EnvelopeSimpleIcon,
+    title: "Email Delivery",
+    description: "Powered by Resend's Node.js SDK for seamless integration.",
+  },
+  {
+    icon: CloudIcon,
+    title: "Serverless",
+    description: "Runs on Cloudflare Workers for low-latency global access.",
+  },
+  {
+    icon: PaletteIcon,
+    title: "Styled with Care",
+    description: "Crafted with Tailwind CSS and Phosphor Icons.",
+  },
+  {
+    icon: ShieldCheckIcon,
+    title: "Spam Protected",
+    description: "Built-in honeypot and validation to filter out bots.",
+  },
+];
 ---
 
 <Layout title={title} description={description}>
@@ -17,16 +46,34 @@ const description =
       "lg:max-w-5xl lg:grid-cols-2 lg:gap-x-16",
     )}
   >
-    <hgroup class="space-y-4 text-center lg:pt-8 lg:text-left">
-      <h1
-        class="text-3xl font-semibold tracking-tight text-neutral-50 sm:text-4xl"
-      >
-        {title}
-      </h1>
-      <p class="text-sm text-neutral-400 sm:text-base">
-        {description}
-      </p>
-    </hgroup>
+    <div class="flex flex-col gap-8 lg:pt-8">
+      <hgroup class="space-y-4 text-center lg:text-left">
+        <h1
+          class="text-3xl font-semibold tracking-tight text-neutral-50 sm:text-4xl"
+        >
+          {title}
+        </h1>
+        <p class="text-sm text-neutral-400 sm:text-base">
+          {description}
+        </p>
+      </hgroup>
+
+      <div class="grid gap-4 min-[30rem]:grid-cols-2">
+        {
+          features.map(({ icon: Icon, title, description }) => (
+            <div class="rounded-xl border border-neutral-800 bg-neutral-900/50 p-4">
+              <Icon
+                aria-hidden
+                className="size-6 text-blue-400"
+                weight="fill"
+              />
+              <h2 class="mt-2 text-sm font-medium text-neutral-200">{title}</h2>
+              <p class="mt-1 text-xs text-neutral-400">{description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
 
     <ContactForm />
   </section>
