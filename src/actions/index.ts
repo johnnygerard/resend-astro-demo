@@ -48,11 +48,15 @@ export const server = {
         text: input.message,
       });
 
-      if (error)
+      if (error) {
+        console.error(
+          `Failed to send email (type: ${error.name}, status: ${error.statusCode}): ${error.message}`,
+        );
         throw new ActionError({
           code: ActionError.statusToCode(error.statusCode ?? 0),
-          message: `Failed to send email (type: ${error.name}, status: ${error.statusCode}): ${error.message}`,
+          message: "Failed to send email. Please try again later.",
         });
+      }
 
       return data;
     },
