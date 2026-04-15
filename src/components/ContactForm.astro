@@ -161,22 +161,24 @@ const inputStyles = tw(
           "group mt-1 inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5",
           "text-sm font-semibold text-neutral-900",
           "bg-neutral-100 transition hover:bg-white active:scale-[0.98]",
+          "data-[state=pending]:cursor-wait data-[state=pending]:opacity-80",
         )}
+        data-state="idle"
         type="submit"
       >
         {/* Idle State */}
-        <span class="group-aria-disabled:hidden">Send message</span>
+        <span class="not-group-data-[state=idle]:hidden">Send message</span>
         <PaperPlaneTiltIcon
           aria-hidden
-          className="size-4.5 group-aria-disabled:hidden"
+          className="size-4.5 not-group-data-[state=idle]:hidden"
           weight="fill"
         />
 
         {/* Pending State */}
-        <span class="not-group-aria-disabled:hidden">Sending...</span>
+        <span class="not-group-data-[state=pending]:hidden">Sending...</span>
         <CircleNotchIcon
           aria-hidden
-          className="size-4.5 animate-spin not-group-aria-disabled:hidden"
+          className="size-4.5 animate-spin not-group-data-[state=pending]:hidden"
           weight="bold"
         />
       </button>
@@ -195,6 +197,11 @@ const inputStyles = tw(
     const submitButton = throwIfNull(
       form.querySelector<HTMLButtonElement>('button[type="submit"]'),
     );
+
+    const setSubmitState = (state: "idle" | "pending"): void => {
+      submitButton.dataset.state = state;
+    };
+
     const serverError = throwIfNull(
       document.getElementById("contact-server-error"),
     );
@@ -295,9 +302,9 @@ const inputStyles = tw(
     form.addEventListener("submit", async (event): Promise<void> => {
       event.preventDefault();
       if (!form.checkValidity()) return; // Prevent invalid submissions
-      if (submitButton.ariaDisabled === "true") return; // Prevent duplicate submissions
+      if (submitButton.dataset.state === "pending") return; // Prevent duplicate submissions
 
-      submitButton.ariaDisabled = "true";
+      setSubmitState("pending");
       serverError.classList.add("invisible", "opacity-0");
       const formData = new FormData(form);
       const response = await actions.send(formData);
@@ -314,7 +321,7 @@ const inputStyles = tw(
         else if (email?.[0]) emailInput.focus();
         else if (message?.[0]) messageInput.focus();
 
-        submitButton.ariaDisabled = "false";
+        setSubmitState("idle");
         return;
       }
 
@@ -322,7 +329,7 @@ const inputStyles = tw(
         console.error(response.error);
         serverErrorMessage.textContent = response.error.message;
         serverError.classList.remove("invisible", "opacity-0");
-        submitButton.ariaDisabled = "false";
+        setSubmitState("idle");
         return;
       }
 
