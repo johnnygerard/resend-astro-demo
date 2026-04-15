@@ -305,20 +305,14 @@ const inputStyles = tw(
       if (isInputError(response.error)) {
         const { name, email, message } = response.error.fields;
 
-        if (name?.[0]) {
-          setNameError(name.join(" "));
-          nameInput.focus();
-        }
+        if (name?.[0]) setNameError(name.join(" "));
+        if (email?.[0]) setEmailError(email.join(" "));
+        if (message?.[0]) setMessageError(message.join(" "));
 
-        if (email?.[0]) {
-          setEmailError(email.join(" "));
-          emailInput.focus();
-        }
-
-        if (message?.[0]) {
-          setMessageError(message.join(" "));
-          messageInput.focus();
-        }
+        // Focus the first invalid field
+        if (name?.[0]) nameInput.focus();
+        else if (email?.[0]) emailInput.focus();
+        else if (message?.[0]) messageInput.focus();
 
         submitButton.ariaDisabled = "false";
         return;
