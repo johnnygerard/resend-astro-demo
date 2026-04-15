@@ -28,7 +28,7 @@ export const server = {
         .trim()
         .min(1, validationMessages.email.valueMissing)
         .max(EMAIL_MAX_LENGTH, validationMessages.email.tooLong)
-        .and(z.email(validationMessages.email.typeMismatch)),
+        .check(z.email(validationMessages.email.typeMismatch)),
       message: z
         .string()
         .trim()
