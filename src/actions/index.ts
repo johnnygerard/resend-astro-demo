@@ -20,15 +20,18 @@ export const server = {
       website: z.string().optional(),
       name: z
         .string()
+        .trim()
         .min(1, validationMessages.name.valueMissing)
         .max(NAME_MAX_LENGTH, validationMessages.name.tooLong),
       email: z
         .string()
+        .trim()
         .min(1, validationMessages.email.valueMissing)
         .max(EMAIL_MAX_LENGTH, validationMessages.email.tooLong)
         .and(z.email(validationMessages.email.typeMismatch)),
       message: z
         .string()
+        .trim()
         .min(1, validationMessages.message.valueMissing)
         .max(MESSAGE_MAX_LENGTH, validationMessages.message.tooLong),
     }),

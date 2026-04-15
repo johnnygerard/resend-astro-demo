@@ -248,7 +248,7 @@ const inputStyles = tw(
       const { validity } = nameInput;
 
       switch (true) {
-        case validity.valueMissing:
+        case nameInput.value.trim() === "":
           setNameError(validationMessages.name.valueMissing);
           break;
         case validity.tooLong:
@@ -263,7 +263,7 @@ const inputStyles = tw(
       const { validity } = emailInput;
 
       switch (true) {
-        case validity.valueMissing:
+        case emailInput.value.trim() === "":
           setEmailError(validationMessages.email.valueMissing);
           break;
         case validity.tooLong:
@@ -281,7 +281,7 @@ const inputStyles = tw(
       const { validity } = messageInput;
 
       switch (true) {
-        case validity.valueMissing:
+        case messageInput.value.trim() === "":
           setMessageError(validationMessages.message.valueMissing);
           break;
         case validity.tooLong:
