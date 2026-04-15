@@ -6,6 +6,7 @@ import {
   ShieldCheckIcon,
 } from "@phosphor-icons/react";
 import ContactForm from "~/components/ContactForm.astro";
+import ExternalLink from "~/components/ExternalLink.astro";
 import Layout from "~/layouts/Layout.astro";
 import { tw } from "~/utils/tw";
 
@@ -73,6 +74,27 @@ const features = [
           ))
         }
       </div>
+
+      <nav>
+        <ul class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-neutral-400">
+          {
+            [
+              { href: "https://astro.build/", label: "Astro" },
+              { href: "https://resend.com/", label: "Resend" },
+              {
+                href: "https://workers.cloudflare.com/",
+                label: "Cloudflare Workers",
+              },
+              { href: "https://tailwindcss.com/", label: "Tailwind CSS" },
+              { href: "https://phosphoricons.com/", label: "Phosphor Icons" },
+            ].map(({ href, label }) => (
+              <li>
+                <ExternalLink href={href}>{label}</ExternalLink>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
     </div>
 
     <ContactForm />
