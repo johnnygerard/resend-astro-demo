@@ -83,7 +83,7 @@ const inputStyles = tw(
       <div class={fieldStyles}>
         <label class={labelStyles} for="contact-name">Name</label>
         <input
-          aria-describedby="contact-name-error"
+          aria-errormessage="contact-name-error"
           autocomplete="name"
           class={inputStyles}
           id="contact-name"
@@ -103,7 +103,7 @@ const inputStyles = tw(
       <div class={fieldStyles}>
         <label class={labelStyles} for="contact-email">Email</label>
         <input
-          aria-describedby="contact-email-error"
+          aria-errormessage="contact-email-error"
           autocomplete="email"
           class={inputStyles}
           id="contact-email"
@@ -123,7 +123,7 @@ const inputStyles = tw(
       <div class={fieldStyles}>
         <label class={labelStyles} for="contact-message">Message</label>
         <textarea
-          aria-describedby="contact-message-error"
+          aria-errormessage="contact-message-error"
           class={tw(
             inputStyles,
             "field-sizing-content min-h-[calc(6lh+1.25rem+2px)]",
