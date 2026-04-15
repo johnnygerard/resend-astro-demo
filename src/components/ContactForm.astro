@@ -198,6 +198,16 @@ const inputStyles = tw(
   import { throwIfNull } from "~/utils/throw-if-null";
   import { validationMessages } from "~/validation/messages";
 
+  const getErrorSetter = (
+    errorElement: HTMLElement,
+    field: HTMLInputElement | HTMLTextAreaElement,
+  ) => {
+    return (message: string): void => {
+      errorElement.textContent = message;
+      field.setCustomValidity(message);
+    };
+  };
+
   const hide = (element: Element): void => {
     element.classList.add("invisible", "opacity-0");
   };
@@ -251,20 +261,9 @@ const inputStyles = tw(
       document.getElementById("contact-message-error"),
     );
 
-    const setNameError = (message: string): void => {
-      nameError.textContent = message;
-      nameInput.setCustomValidity(message);
-    };
-
-    const setEmailError = (message: string): void => {
-      emailError.textContent = message;
-      emailInput.setCustomValidity(message);
-    };
-
-    const setMessageError = (message: string): void => {
-      messageError.textContent = message;
-      messageInput.setCustomValidity(message);
-    };
+    const setNameError = getErrorSetter(nameError, nameInput);
+    const setEmailError = getErrorSetter(emailError, emailInput);
+    const setMessageError = getErrorSetter(messageError, messageInput);
 
     nameInput.addEventListener("input", () => {
       const { validity } = nameInput;
