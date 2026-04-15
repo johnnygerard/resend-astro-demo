@@ -62,7 +62,7 @@ const features = [
       <div class="grid gap-4 min-[30rem]:grid-cols-2">
         {
           features.map(({ icon: Icon, title, description }) => (
-            <div class="rounded-xl border border-neutral-800 bg-neutral-900/50 p-4">
+            <article class="rounded-xl border border-neutral-800 bg-neutral-900/50 p-4">
               <Icon
                 aria-hidden
                 className="size-6 text-blue-400"
@@ -70,7 +70,7 @@ const features = [
               />
               <h2 class="mt-2 text-sm font-medium text-neutral-200">{title}</h2>
               <p class="mt-1 text-xs text-neutral-400">{description}</p>
-            </div>
+            </article>
           ))
         }
       </div>
