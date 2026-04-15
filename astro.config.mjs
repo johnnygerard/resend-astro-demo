@@ -12,6 +12,16 @@ export default defineConfig({
   },
   env: {
     schema: {
+      CF_TURNSTILE_SECRET_KEY: envField.string({
+        access: "secret",
+        context: "server",
+        default: "1x0000000000000000000000000000000AA", // @see https://developers.cloudflare.com/turnstile/troubleshooting/testing/#test-secret-keys
+      }),
+      CF_TURNSTILE_SITE_KEY: envField.string({
+        access: "public",
+        context: "client",
+        default: "1x00000000000000000000AA", // @see https://developers.cloudflare.com/turnstile/troubleshooting/testing/#test-sitekeys
+      }),
       RESEND_API_KEY: envField.string({
         access: "secret",
         context: "server",
