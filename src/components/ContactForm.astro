@@ -198,6 +198,14 @@ const inputStyles = tw(
   import { throwIfNull } from "~/utils/throw-if-null";
   import { validationMessages } from "~/validation/messages";
 
+  const hide = (element: Element): void => {
+    element.classList.add("invisible", "opacity-0");
+  };
+
+  const show = (element: Element): void => {
+    element.classList.remove("invisible", "opacity-0");
+  };
+
   try {
     const form = throwIfNull(document.forms.namedItem("contact"));
 
@@ -312,7 +320,7 @@ const inputStyles = tw(
       if (submitButton.dataset.state === "pending") return; // Prevent duplicate submissions
 
       setSubmitState("pending");
-      serverError.classList.add("invisible", "opacity-0");
+      hide(serverError);
       const formData = new FormData(form);
       const response = await actions.send(formData);
 
@@ -335,14 +343,13 @@ const inputStyles = tw(
       if (response.error) {
         console.error(response.error);
         serverErrorMessage.textContent = response.error.message;
-        serverError.classList.remove("invisible", "opacity-0");
+        show(serverError);
         setSubmitState("idle");
         return;
       }
 
-      // Show success message and hide form
-      form.classList.add("invisible", "opacity-0");
-      successMessage.classList.remove("invisible", "opacity-0");
+      hide(form);
+      show(successMessage);
     });
   } catch (error) {
     console.error("Failed to initialize contact form:", error);
