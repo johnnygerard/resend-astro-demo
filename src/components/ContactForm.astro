@@ -55,10 +55,16 @@ const inputStyles = tw(
       className="mx-auto size-12 text-green-400"
       weight="fill"
     />
-    <h2 class="mt-4 text-xl font-semibold text-neutral-100">Message Sent!</h2>
-    <p class="mt-1.5 text-sm text-neutral-400">
-      Thanks for reaching out. We'll get back to you as soon as possible.
-    </p>
+    <hgroup class="mt-4 max-w-100">
+      <h2 class="text-xl font-semibold text-neutral-100">Message Sent!</h2>
+      <p class="mt-1.5 text-sm text-neutral-400">
+        Thanks for trying out this demo! For more frontend engineering projects,
+        check out my <ExternalLink
+          variant="inline"
+          href="https://www.jgerard.dev/en-us/portfolio">portfolio</ExternalLink
+        >.
+      </p>
+    </hgroup>
   </div>
 
   <noscript>
@@ -67,7 +73,7 @@ const inputStyles = tw(
         This contact form requires JavaScript to operate. Please ensure that it
         is supported and enabled in your browser settings. To learn more, check
         out <ExternalLink
-          class="underline"
+          variant="inline"
           href="https://www.enable-javascript.com/"
           >How to enable JavaScript in your browser</ExternalLink
         >.

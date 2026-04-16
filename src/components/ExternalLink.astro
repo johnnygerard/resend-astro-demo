@@ -2,17 +2,20 @@
 import { tw } from "~/utils/tw";
 
 type Props = {
-  class?: string;
   href: string;
+  variant?: "default" | "inline";
 };
 
-const { class: className, href } = Astro.props;
+const { href, variant = "default" } = Astro.props;
 ---
 
 <a
   class={tw(
-    "-mx-1 rounded-sm px-1 transition-colors hover:text-blue-400",
-    className,
+    "rounded-sm transition-colors hover:text-blue-400",
+    {
+      default: "-mx-1 px-1",
+      inline: "text-neutral-300 underline",
+    }[variant],
   )}
   href={href}
   rel="noopener noreferrer"
