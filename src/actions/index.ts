@@ -10,6 +10,8 @@ import { Resend, type CreateEmailResponseSuccess } from "resend";
 import { emailSchema, messageSchema, nameSchema } from "~/validation/schemas";
 
 const resend = new Resend(RESEND_API_KEY);
+const MISSING_CF_TURNSTILE_TOKEN_ERROR =
+  "CAPTCHA verification failed. Please try again.";
 
 export const server = {
   // The following server action will be used with a basic contact form.
@@ -21,8 +23,8 @@ export const server = {
       email: emailSchema,
       message: messageSchema,
       "cf-turnstile-response": z
-        .string()
-        .min(1, "CAPTCHA response is required."),
+        .string(MISSING_CF_TURNSTILE_TOKEN_ERROR)
+        .min(1, MISSING_CF_TURNSTILE_TOKEN_ERROR),
     }),
     handler: async (input) => {
       if (input.website?.length) {
