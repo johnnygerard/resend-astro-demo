@@ -7,6 +7,8 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     env:
+      CF_TURNSTILE_SECRET_KEY: ${{ vars.CF_TURNSTILE_SECRET_KEY }}
+      CF_TURNSTILE_SITEKEY: ${{ vars.CF_TURNSTILE_SITEKEY }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
     steps:
       - name: Checkout repository

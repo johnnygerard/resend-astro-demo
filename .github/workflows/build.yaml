@@ -5,6 +5,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      CF_TURNSTILE_SECRET_KEY: ${{ vars.CF_TURNSTILE_SECRET_KEY }}
+      CF_TURNSTILE_SITEKEY: ${{ vars.CF_TURNSTILE_SITEKEY }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
