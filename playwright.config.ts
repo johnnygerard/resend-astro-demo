@@ -63,5 +63,10 @@ export default defineConfig({
     command: "npm run preview",
     url: "http://localhost:4322",
     reuseExistingServer: !process.env.CI,
+    env: {
+      // Cloudflare Turnstile test keys (https://developers.cloudflare.com/turnstile/troubleshooting/testing/)
+      CF_TURNSTILE_SECRET_KEY: "1x0000000000000000000000000000000AA",
+      CF_TURNSTILE_SITEKEY: "1x00000000000000000000AA",
+    },
   },
 });
