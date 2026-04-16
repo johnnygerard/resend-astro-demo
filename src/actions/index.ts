@@ -7,12 +7,7 @@ import {
   TARGET_EMAIL,
 } from "astro:env/server";
 import { Resend, type CreateEmailResponseSuccess } from "resend";
-import {
-  EMAIL_MAX_LENGTH,
-  MESSAGE_MAX_LENGTH,
-  NAME_MAX_LENGTH,
-  validationMessages,
-} from "~/validation/messages";
+import { emailSchema, messageSchema, nameSchema } from "~/validation/schemas";
 
 const resend = new Resend(RESEND_API_KEY);
 
@@ -22,30 +17,17 @@ export const server = {
     accept: "form",
     input: z.object({
       website: z.string().optional(),
-      name: z
-        .string()
-        .trim()
-        .min(1, validationMessages.name.valueMissing)
-        .max(NAME_MAX_LENGTH, validationMessages.name.tooLong),
-      email: z
-        .string()
-        .trim()
-        .min(1, validationMessages.email.valueMissing)
-        .max(EMAIL_MAX_LENGTH, validationMessages.email.tooLong)
-        .check(z.email(validationMessages.email.typeMismatch)),
-      message: z
-        .string()
-        .trim()
-        .min(1, validationMessages.message.valueMissing)
-        .max(MESSAGE_MAX_LENGTH, validationMessages.message.tooLong),
+      name: nameSchema,
+      email: emailSchema,
+      message: messageSchema,
       "cf-turnstile-response": z
         .string()
-        .min(1, "Turnstile verification is required."),
+        .min(1, "CAPTCHA response is required."),
     }),
     handler: async (input) => {
       if (input.website?.length) {
         console.log("Received non-empty honeypot field.");
-        return { id: uuid() } as CreateEmailResponseSuccess;
+        return { id: uuid() } satisfies CreateEmailResponseSuccess;
       }
 
       // Validate Turnstile token with Siteverify API (https://developers.cloudflare.com/turnstile/get-started/server-side-validation/)

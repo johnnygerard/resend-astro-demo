@@ -7,13 +7,13 @@ import {
 } from "@phosphor-icons/react";
 import { CF_TURNSTILE_SITE_KEY } from "astro:env/client";
 import { tw } from "~/utils/tw";
+import ExternalLink from "~/components/ExternalLink.astro";
 import {
   EMAIL_MAX_LENGTH,
   MESSAGE_MAX_LENGTH,
+  MESSAGE_MIN_LENGTH,
   NAME_MAX_LENGTH,
-  validationMessages,
-} from "~/validation/messages";
-import ExternalLink from "~/components/ExternalLink.astro";
+} from "~/validation/schemas";
 
 type Props = {
   class?: string;
@@ -110,9 +110,7 @@ const inputStyles = tw(
           spellcheck="false"
           type="text"
         />
-        <p class={errorStyles} id="contact-name-error">
-          {validationMessages.name.valueMissing}
-        </p>
+        <p class={errorStyles} id="contact-name-error"></p>
       </div>
 
       {/* Email Field */}
@@ -130,9 +128,7 @@ const inputStyles = tw(
           spellcheck="false"
           type="email"
         />
-        <p class={errorStyles} id="contact-email-error">
-          {validationMessages.email.valueMissing}
-        </p>
+        <p class={errorStyles} id="contact-email-error"></p>
       </div>
 
       {/* Message Field */}
@@ -147,12 +143,11 @@ const inputStyles = tw(
           )}
           id="contact-message"
           maxlength={MESSAGE_MAX_LENGTH}
+          minlength={MESSAGE_MIN_LENGTH}
           name="message"
           placeholder="Tell us what's on your mind..."
           required></textarea>
-        <p class={errorStyles} id="contact-message-error">
-          {validationMessages.message.valueMissing}
-        </p>
+        <p class={errorStyles} id="contact-message-error"></p>
       </div>
 
       {/* Server Error Banner */}
@@ -228,9 +223,11 @@ const inputStyles = tw(
 </div>
 
 <script>
+  import type { z } from "astro/zod";
   import { actions, isInputError } from "astro:actions";
-  import { throwIfNull } from "~/utils/throw-if-null";
-  import { validationMessages } from "~/validation/messages";
+  import { assertInstanceOf } from "~/utils/assert-instance-of";
+  import { assertNotNull } from "~/utils/assert-not-null";
+  import { emailSchema, messageSchema, nameSchema } from "~/validation/schemas";
 
   const getErrorSetter = (
     errorElement: HTMLElement,
@@ -242,6 +239,23 @@ const inputStyles = tw(
     };
   };
 
+  // Reuse server-side Zod schemas for client-side validation
+  const addValidationHandlers = (
+    field: HTMLInputElement | HTMLTextAreaElement,
+    errorElement: HTMLElement,
+    schema: z.ZodString,
+  ): void => {
+    const setError = getErrorSetter(errorElement, field);
+
+    const validate = (): void => {
+      const { error } = schema.safeParse(field.value);
+      setError(error?.issues[0]?.message ?? "");
+    };
+
+    field.addEventListener("input", validate);
+    field.addEventListener("invalid", validate);
+  };
+
   const hide = (element: Element): void => {
     element.classList.add("invisible", "opacity-0");
   };
@@ -251,47 +265,55 @@ const inputStyles = tw(
   };
 
   try {
-    const form = throwIfNull(document.forms.namedItem("contact"));
+    const form = assertNotNull(document.forms.namedItem("contact"));
 
-    const submitButton = throwIfNull(
-      form.querySelector<HTMLButtonElement>('button[type="submit"]'),
+    const submitButton = assertInstanceOf(
+      form.querySelector('button[type="submit"]'),
+      HTMLButtonElement,
     );
 
     const setSubmitState = (state: "idle" | "pending"): void => {
       submitButton.dataset.state = state;
     };
 
-    const serverError = throwIfNull(
+    const serverError = assertNotNull(
       document.getElementById("contact-server-error"),
     );
-    const serverErrorMessage = throwIfNull(
+    const serverErrorMessage = assertNotNull(
       document.getElementById("contact-server-error-message"),
     );
 
-    const successMessage = throwIfNull(
+    const displayServerError = (message: string): void => {
+      serverErrorMessage.textContent = message;
+      show(serverError);
+    };
+
+    const successMessage = assertNotNull(
       document.getElementById("contact-success"),
     );
 
-    const nameInput = throwIfNull(document.getElementById("contact-name"));
-    const emailInput = throwIfNull(document.getElementById("contact-email"));
-    const messageInput = throwIfNull(
-      document.getElementById("contact-message"),
+    const nameInput = assertInstanceOf(
+      document.getElementById("contact-name"),
+      HTMLInputElement,
     );
 
-    if (!(nameInput instanceof HTMLInputElement))
-      throw new Error("Name input is not an HTMLInputElement");
-    if (!(emailInput instanceof HTMLInputElement))
-      throw new Error("Email input is not an HTMLInputElement");
-    if (!(messageInput instanceof HTMLTextAreaElement))
-      throw new Error("Message input is not an HTMLTextAreaElement");
+    const emailInput = assertInstanceOf(
+      document.getElementById("contact-email"),
+      HTMLInputElement,
+    );
 
-    const nameError = throwIfNull(
+    const messageInput = assertInstanceOf(
+      document.getElementById("contact-message"),
+      HTMLTextAreaElement,
+    );
+
+    const nameError = assertNotNull(
       document.getElementById("contact-name-error"),
     );
-    const emailError = throwIfNull(
+    const emailError = assertNotNull(
       document.getElementById("contact-email-error"),
     );
-    const messageError = throwIfNull(
+    const messageError = assertNotNull(
       document.getElementById("contact-message-error"),
     );
 
@@ -299,90 +321,65 @@ const inputStyles = tw(
     const setEmailError = getErrorSetter(emailError, emailInput);
     const setMessageError = getErrorSetter(messageError, messageInput);
 
-    nameInput.addEventListener("input", () => {
-      const { validity } = nameInput;
-
-      switch (true) {
-        case nameInput.value.trim() === "":
-          setNameError(validationMessages.name.valueMissing);
-          break;
-        case validity.tooLong:
-          setNameError(validationMessages.name.tooLong);
-          break;
-        default:
-          setNameError("");
-      }
-    });
-
-    emailInput.addEventListener("input", () => {
-      const { validity } = emailInput;
-
-      switch (true) {
-        case emailInput.value.trim() === "":
-          setEmailError(validationMessages.email.valueMissing);
-          break;
-        case validity.tooLong:
-          setEmailError(validationMessages.email.tooLong);
-          break;
-        case validity.typeMismatch:
-          setEmailError(validationMessages.email.typeMismatch);
-          break;
-        default:
-          setEmailError("");
-      }
-    });
-
-    messageInput.addEventListener("input", () => {
-      const { validity } = messageInput;
-
-      switch (true) {
-        case messageInput.value.trim() === "":
-          setMessageError(validationMessages.message.valueMissing);
-          break;
-        case validity.tooLong:
-          setMessageError(validationMessages.message.tooLong);
-          break;
-        default:
-          setMessageError("");
-      }
-    });
+    addValidationHandlers(nameInput, nameError, nameSchema);
+    addValidationHandlers(emailInput, emailError, emailSchema);
+    addValidationHandlers(messageInput, messageError, messageSchema);
 
     form.addEventListener("submit", async (event): Promise<void> => {
       event.preventDefault();
       if (!form.checkValidity()) return; // Prevent invalid submissions
       if (submitButton.dataset.state === "pending") return; // Prevent duplicate submissions
 
-      setSubmitState("pending");
-      hide(serverError);
-      const formData = new FormData(form);
-      const response = await actions.send(formData);
+      try {
+        setSubmitState("pending");
+        hide(serverError);
+        const formData = new FormData(form);
+        const response = await actions.send(formData);
 
-      if (isInputError(response.error)) {
-        const { name, email, message } = response.error.fields;
+        if (response.data) {
+          hide(form);
+          show(successMessage);
+          return;
+        }
 
-        if (name?.[0]) setNameError(name.join(" "));
-        if (email?.[0]) setEmailError(email.join(" "));
-        if (message?.[0]) setMessageError(message.join(" "));
+        if (isInputError(response.error)) {
+          const {
+            "cf-turnstile-response": cfTurnstileResponse,
+            name,
+            email,
+            message,
+          } = response.error.fields;
 
-        // Focus the first invalid field
-        if (name?.[0]) nameInput.focus();
-        else if (email?.[0]) emailInput.focus();
-        else if (message?.[0]) messageInput.focus();
+          if (cfTurnstileResponse?.[0]) {
+            displayServerError(cfTurnstileResponse.join(" "));
+            return;
+          }
 
+          if (name?.[0]) setNameError(name.join(" "));
+          if (email?.[0]) setEmailError(email.join(" "));
+          if (message?.[0]) setMessageError(message.join(" "));
+
+          // Focus the first invalid field
+          if (name?.[0]) nameInput.focus();
+          else if (email?.[0]) emailInput.focus();
+          else if (message?.[0]) messageInput.focus();
+
+          return;
+        }
+
+        if (response.error) {
+          console.error(response.error);
+          displayServerError(response.error.message);
+          return;
+        }
+      } catch (error) {
+        console.error("Error during form submission:", error);
+        displayServerError(
+          "An unexpected error occurred. Please try again later.",
+        );
+      } finally {
         setSubmitState("idle");
-        return;
       }
-
-      if (response.error) {
-        console.error(response.error);
-        serverErrorMessage.textContent = response.error.message;
-        show(serverError);
-        setSubmitState("idle");
-        return;
-      }
-
-      hide(form);
-      show(successMessage);
     });
   } catch (error) {
     console.error("Failed to initialize contact form:", error);
