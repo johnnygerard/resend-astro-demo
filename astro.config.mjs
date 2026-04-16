@@ -17,7 +17,7 @@ export default defineConfig({
         context: "server",
         default: "1x0000000000000000000000000000000AA", // @see https://developers.cloudflare.com/turnstile/troubleshooting/testing/#test-secret-keys
       }),
-      CF_TURNSTILE_SITE_KEY: envField.string({
+      CF_TURNSTILE_SITEKEY: envField.string({
         access: "public",
         context: "client",
         default: "1x00000000000000000000AA", // @see https://developers.cloudflare.com/turnstile/troubleshooting/testing/#test-sitekeys
