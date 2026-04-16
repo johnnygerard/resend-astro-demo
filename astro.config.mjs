@@ -47,7 +47,7 @@ export default defineConfig({
   ],
   integrations: [react(), sitemap()],
   output: "server",
-  site: "https://resend-astro-demo.mail-25a.workers.dev",
+  site: "https://resend.jgerard.dev",
   trailingSlash: "never",
   vite: {
     plugins: [tailwindcss()],
