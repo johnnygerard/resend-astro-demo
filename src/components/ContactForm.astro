@@ -37,7 +37,7 @@ const inputStyles = tw(
 
 <div
   class={tw(
-    "w-full bg-neutral-900/70 p-4 backdrop-blur-sm sm:p-8",
+    "w-full overflow-hidden bg-neutral-900/70 p-4 backdrop-blur-sm sm:p-8",
     "relative rounded-2xl border border-neutral-800 shadow-xl",
     className,
   )}
@@ -213,15 +213,17 @@ const inputStyles = tw(
            * @see https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/
            */
         }
-        <div
-          class="cf-turnstile"
-          data-appearance="always"
-          data-language="en-us"
-          data-sitekey={CF_TURNSTILE_SITE_KEY}
-          data-size="flexible"
-          data-theme="dark"
-          style="height: 65px;"
-        >
+        <div class="overflow-x-auto [scrollbar-width:thin]">
+          <div
+            class="cf-turnstile"
+            data-appearance="always"
+            data-language="en-us"
+            data-sitekey={CF_TURNSTILE_SITE_KEY}
+            data-size="flexible"
+            data-theme="dark"
+            style="height: 65px;"
+          >
+          </div>
         </div>
       </div>
     </div>
