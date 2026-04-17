@@ -1,13 +1,10 @@
-name: Build Check
+name: Build
 on:
   pull_request:
     branches: [main]
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      CF_TURNSTILE_SECRET_KEY: ${{ vars.CF_TURNSTILE_SECRET_KEY }}
-      CF_TURNSTILE_SITEKEY: ${{ vars.CF_TURNSTILE_SITEKEY }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -15,5 +12,8 @@ jobs:
       - name: Initialize environment
         uses: ./.github/actions/init
 
-      - name: Run build
+      - name: Build project
         run: npm run build
+
+      - name: Run checks
+        run: npm run check
