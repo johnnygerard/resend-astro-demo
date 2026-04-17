@@ -13,10 +13,8 @@ jobs:
         uses: ./.github/actions/init
 
       - name: Build project
-        run: npm run build
+        run: npm run build -- --mode ci
         env:
-          CF_TURNSTILE_SITEKEY: ${{ vars.CF_TURNSTILE_SITEKEY }}
-          CF_TURNSTILE_SECRET_KEY: ${{ vars.CF_TURNSTILE_SECRET_KEY }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
       - name: Run checks
