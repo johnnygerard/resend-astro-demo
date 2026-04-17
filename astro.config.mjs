@@ -16,7 +16,7 @@ export default defineConfig({
         access: "secret",
         context: "server",
       }),
-      CF_TURNSTILE_SITEKEY: envField.string({
+      PUBLIC_CF_TURNSTILE_SITEKEY: envField.string({
         access: "public",
         context: "client",
       }),
