@@ -7,16 +7,15 @@
       "~/*": ["./src/*"],
       "~root/*": ["./*"]
     },
-    "types": ["./worker-configuration.d.ts", "node"]
+    "types": ["node"]
   },
   "extends": "astro/tsconfigs/strictest",
   "include": [
     "__tests__",
     ".astro/types.d.ts",
-    "astro.config.mjs",
-    "playwright.config.ts",
+    "*.config.*",
     "pw",
     "src",
-    "vitest.config.ts"
+    "worker-configuration.d.ts"
   ]
 }
