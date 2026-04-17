@@ -6,6 +6,10 @@ jobs:
   playwright:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      CF_TURNSTILE_SITEKEY: ${{ vars.CF_TURNSTILE_SITEKEY }}
+      CF_TURNSTILE_SECRET_KEY: ${{ vars.CF_TURNSTILE_SECRET_KEY }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
