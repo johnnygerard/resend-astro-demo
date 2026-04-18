@@ -5,7 +5,6 @@ import {
   PaperPlaneTiltIcon,
   WarningCircleIcon,
 } from "@phosphor-icons/react";
-import { PUBLIC_CF_TURNSTILE_SITEKEY } from "astro:env/client";
 import { tw } from "~/utils/tw";
 import ExternalLink from "~/components/ExternalLink.astro";
 import {
@@ -218,7 +217,7 @@ const inputStyles = tw(
             class="cf-turnstile"
             data-appearance="always"
             data-language="en-us"
-            data-sitekey={PUBLIC_CF_TURNSTILE_SITEKEY}
+            data-sitekey={import.meta.env.PUBLIC_CF_TURNSTILE_SITEKEY}
             data-size="flexible"
             data-theme="dark"
             style="height: 65px;"
