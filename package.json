@@ -58,7 +58,6 @@
     "build:test": "astro build --mode testing",
     "cf-typegen": "wrangler types",
     "check": "tsc --noEmit && astro check",
-    "deploy": "wrangler deploy",
     "dev": "astro dev",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
