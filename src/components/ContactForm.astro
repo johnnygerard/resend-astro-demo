@@ -45,6 +45,7 @@ const inputStyles = tw(
 >
   {/* Success Message */}
   <div
+    aria-live="polite"
     class={tw(
       "absolute inset-0 grid place-content-center text-center",
       "invisible opacity-0 transition-opacity duration-300",
@@ -117,7 +118,7 @@ const inputStyles = tw(
           spellcheck="false"
           type="text"
         />
-        <p class={errorStyles} id="contact-name-error"></p>
+        <p aria-live="polite" class={errorStyles} id="contact-name-error"></p>
       </div>
 
       {/* Email Field */}
@@ -135,7 +136,7 @@ const inputStyles = tw(
           spellcheck="false"
           type="email"
         />
-        <p class={errorStyles} id="contact-email-error"></p>
+        <p aria-live="polite" class={errorStyles} id="contact-email-error"></p>
       </div>
 
       {/* Message Field */}
@@ -154,11 +155,13 @@ const inputStyles = tw(
           name="message"
           placeholder="Tell us what's on your mind..."
           required></textarea>
-        <p class={errorStyles} id="contact-message-error"></p>
+        <p aria-live="polite" class={errorStyles} id="contact-message-error">
+        </p>
       </div>
 
       {/* Server Error Banner */}
       <div
+        aria-live="polite"
         class={tw(
           "flex items-center gap-2 rounded-lg border border-red-500/30",
           "bg-red-500/10 px-4 py-3 text-sm text-red-400",
@@ -243,6 +246,7 @@ const inputStyles = tw(
     return (message: string): void => {
       errorElement.textContent = message;
       field.setCustomValidity(message);
+      field.setAttribute("aria-invalid", Boolean(message).toString());
     };
   };
 
