@@ -7,7 +7,7 @@
     "not_found_handling": "404-page"
   },
   "compatibility_date": "2026-03-17",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "compatibility_flags": ["global_fetch_strictly_public"],
   "main": "@astrojs/cloudflare/entrypoints/server",
   "name": "resend-astro-demo",
   "observability": {
