@@ -8,6 +8,49 @@ const resend = new Resend(import.meta.env.RESEND_API_KEY);
 const MISSING_CF_TURNSTILE_TOKEN_ERROR =
   "CAPTCHA verification failed. Please try again.";
 
+/**
+ * Verify the Cloudflare Turnstile token using the Siteverify API.
+ * @see https://developers.cloudflare.com/turnstile/get-started/server-side-validation/
+ * @param token - The Turnstile token to verify
+ * @throws {ActionError} Throws an ActionError if the token is missing, invalid, or if the Siteverify API request fails.
+ */
+const verifyTurnstileToken = async (token: string): Promise<void> => {
+  const siteverifyResponse = await fetch(
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        secret: import.meta.env.CF_TURNSTILE_SECRET_KEY,
+        response: token,
+      }),
+    },
+  );
+
+  if (!siteverifyResponse.ok) {
+    console.error(
+      "Siteverify API request failed with status:",
+      siteverifyResponse.status,
+    );
+    throw new ActionError({
+      code: "INTERNAL_SERVER_ERROR",
+      message:
+        "An unexpected error occurred during CAPTCHA verification. Please try again.",
+    });
+  }
+
+  const siteverifyResult = z
+    .looseObject({ success: z.boolean() })
+    .parse(await siteverifyResponse.json());
+
+  if (!siteverifyResult.success) {
+    throw new ActionError({
+      code: "FORBIDDEN",
+      message: "CAPTCHA verification failed. Please try again.",
+    });
+  }
+};
+
 export const server = {
   // The following server action will be used with a basic contact form.
   send: defineAction({
@@ -27,41 +70,7 @@ export const server = {
         return { id: uuid() } satisfies CreateEmailResponseSuccess;
       }
 
-      // Validate Turnstile token with Siteverify API (https://developers.cloudflare.com/turnstile/get-started/server-side-validation/)
-      const siteverifyResponse = await fetch(
-        "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            secret: import.meta.env.CF_TURNSTILE_SECRET_KEY,
-            response: input["cf-turnstile-response"],
-          }),
-        },
-      );
-
-      if (!siteverifyResponse.ok) {
-        console.error(
-          "Siteverify API request failed with status:",
-          siteverifyResponse.status,
-        );
-        throw new ActionError({
-          code: "INTERNAL_SERVER_ERROR",
-          message:
-            "An unexpected error occurred during CAPTCHA verification. Please try again.",
-        });
-      }
-
-      const siteverifyResult = z
-        .looseObject({ success: z.boolean() })
-        .parse(await siteverifyResponse.json());
-
-      if (!siteverifyResult.success) {
-        throw new ActionError({
-          code: "FORBIDDEN",
-          message: "CAPTCHA verification failed. Please try again.",
-        });
-      }
+      await verifyTurnstileToken(input["cf-turnstile-response"]);
 
       const { data, error } = await resend.emails.send({
         from: `John <hello@resend.jgerard.dev>`,
