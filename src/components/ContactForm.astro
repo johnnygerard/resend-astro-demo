@@ -362,7 +362,7 @@ const inputStyles = tw(
           } = response.error.fields;
 
           if (cfTurnstileResponse?.[0]) {
-            displayServerError(cfTurnstileResponse.join(" "));
+            displayServerError("Security challenge failed. Please try again.");
             return;
           }
 
