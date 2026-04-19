@@ -345,21 +345,21 @@ const inputStyles = tw(
         setSubmitState("pending");
         hide(serverError);
         const formData = new FormData(form);
-        const response = await actions.send(formData);
+        const { data, error } = await actions.send(formData);
 
-        if (response.data) {
+        if (data) {
           hide(form);
           show(successMessage);
           return;
         }
 
-        if (isInputError(response.error)) {
+        if (isInputError(error)) {
           const {
             "cf-turnstile-response": cfTurnstileResponse,
             name,
             email,
             message,
-          } = response.error.fields;
+          } = error.fields;
 
           if (cfTurnstileResponse?.[0]) {
             displayServerError("Security challenge failed. Please try again.");
@@ -378,11 +378,8 @@ const inputStyles = tw(
           return;
         }
 
-        if (response.error) {
-          console.error(response.error);
-          displayServerError(response.error.message);
-          return;
-        }
+        console.error(error);
+        displayServerError(error.message);
       } catch (error) {
         console.error("Error during form submission:", error);
         displayServerError(
