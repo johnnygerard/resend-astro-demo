@@ -24,6 +24,7 @@ const verifyTurnstileToken = async (token: string): Promise<void> => {
         secret: import.meta.env.CF_TURNSTILE_SECRET_KEY,
         response: token,
       }),
+      signal: AbortSignal.timeout(5000),
     },
   );
 
