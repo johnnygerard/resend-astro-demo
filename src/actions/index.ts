@@ -22,7 +22,7 @@ export const server = {
         .min(1, MISSING_CF_TURNSTILE_TOKEN_ERROR),
     }),
     handler: async (input) => {
-      if (input.website?.length) {
+      if (input.website) {
         console.log("Received non-empty honeypot field.");
         return { id: uuid() } satisfies CreateEmailResponseSuccess;
       }
