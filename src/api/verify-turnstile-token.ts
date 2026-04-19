@@ -1,6 +1,32 @@
 import { z } from "astro/zod";
 import { ActionError } from "astro:actions";
 
+// https://developers.cloudflare.com/turnstile/get-started/server-side-validation/#api-response-format
+const siteverifySchema = z
+  .object({
+    success: z.boolean(),
+    challenge_ts: z.string(),
+    hostname: z.string(),
+    "error-codes": z.array(
+      z.enum([
+        "missing-input-secret",
+        "invalid-input-secret",
+        "missing-input-response",
+        "invalid-input-response",
+        "bad-request",
+        "timeout-or-duplicate",
+        "internal-error",
+      ]),
+    ),
+    action: z.string(),
+    cdata: z.string(),
+    metadata: z.object({
+      ephemeral_id: z.string().optional(), // Enterprise-only field
+    }),
+  })
+  .partial()
+  .required({ success: true });
+
 /**
  * Verify the Cloudflare Turnstile token using the Siteverify API.
  * @see https://developers.cloudflare.com/turnstile/get-started/server-side-validation/
@@ -33,9 +59,9 @@ export const verifyTurnstileToken = async (token: string): Promise<void> => {
     });
   }
 
-  const siteverifyResult = z
-    .looseObject({ success: z.boolean() })
-    .parse(await siteverifyResponse.json());
+  const siteverifyResult = siteverifySchema.parse(
+    await siteverifyResponse.json(),
+  );
 
   if (!siteverifyResult.success) {
     throw new ActionError({
