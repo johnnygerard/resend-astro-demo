@@ -7,7 +7,7 @@ import { verifyTurnstileToken } from "~/api/verify-turnstile-token";
 import { emailSchema, messageSchema, nameSchema } from "~/validation/schemas";
 
 export const server = {
-  send: defineAction({
+  submitContactForm: defineAction({
     accept: "form",
     input: z.object({
       website: z.string().optional(),

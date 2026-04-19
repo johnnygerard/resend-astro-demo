@@ -345,7 +345,7 @@ const inputStyles = tw(
         setSubmitState("pending");
         hide(serverError);
         const formData = new FormData(form);
-        const { data, error } = await actions.send(formData);
+        const { data, error } = await actions.submitContactForm(formData);
 
         if (data) {
           hide(form);
