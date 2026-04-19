@@ -31,42 +31,82 @@ const siteverifySchema = z
  * Verify the Cloudflare Turnstile token using the Siteverify API.
  * @see https://developers.cloudflare.com/turnstile/get-started/server-side-validation/
  * @param token - The Turnstile token to verify
- * @throws {ActionError} Throws an ActionError if the token is missing, invalid, or if the Siteverify API request fails.
  */
 export const verifyTurnstileToken = async (token: string): Promise<void> => {
-  const siteverifyResponse = await fetch(
-    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        secret: import.meta.env.CF_TURNSTILE_SECRET_KEY,
-        response: token,
-      }),
-      signal: AbortSignal.timeout(5000),
-    },
-  );
+  let siteverifyResponse: Response;
 
-  if (!siteverifyResponse.ok) {
-    console.error(
-      "Siteverify API request failed with status:",
-      siteverifyResponse.status,
+  try {
+    siteverifyResponse = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          secret: import.meta.env.CF_TURNSTILE_SECRET_KEY,
+          response: token,
+        }),
+        signal: AbortSignal.timeout(5000),
+      },
     );
+  } catch (e) {
+    throw new Error("Fetch request to Siteverify API failed.", { cause: e });
+  }
+
+  if (!siteverifyResponse.ok)
+    throw new Error(
+      `Siteverify API request failed with status: ${siteverifyResponse.status} ${siteverifyResponse.statusText}`,
+    );
+
+  let siteverifyResult: z.infer<typeof siteverifySchema>;
+
+  try {
+    siteverifyResult = siteverifySchema.parse(await siteverifyResponse.json());
+  } catch (e) {
+    throw new Error(
+      e instanceof z.ZodError
+        ? "Siteverify API response failed schema validation."
+        : "Unable to parse JSON payload from Siteverify API response.",
+      { cause: e },
+    );
+  }
+
+  if (siteverifyResult.success) return;
+
+  const errorCodes = siteverifyResult["error-codes"];
+  if (!errorCodes?.[0])
+    throw new Error(
+      "No error codes provided in failed Siteverify API response.",
+    );
+
+  // Handle fatal errors.
+  if (
+    errorCodes.includes("missing-input-secret") ||
+    errorCodes.includes("invalid-input-secret") ||
+    errorCodes.includes("missing-input-response") ||
+    errorCodes.includes("bad-request") ||
+    errorCodes.includes("internal-error")
+  ) {
+    console.error(
+      "Siteverify API validation failed with error codes:",
+      errorCodes,
+    );
+
     throw new ActionError({
-      code: "INTERNAL_SERVER_ERROR",
+      code: errorCodes.includes("bad-request")
+        ? "BAD_REQUEST"
+        : "INTERNAL_SERVER_ERROR",
       message:
-        "An unexpected error occurred during CAPTCHA verification. Please try again.",
+        "An error occurred during security challenge verification. Please try again later.",
     });
   }
 
-  const siteverifyResult = siteverifySchema.parse(
-    await siteverifyResponse.json(),
+  console.info(
+    "Security challenge failed (error codes: %s).",
+    errorCodes.join(", "),
   );
 
-  if (!siteverifyResult.success) {
-    throw new ActionError({
-      code: "FORBIDDEN",
-      message: "CAPTCHA verification failed. Please try again.",
-    });
-  }
+  throw new ActionError({
+    code: "FORBIDDEN",
+    message: "Security challenge failed. Please try again.",
+  });
 };
