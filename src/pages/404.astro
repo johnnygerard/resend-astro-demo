@@ -1,8 +1,7 @@
 ---
 import { ArrowLeftIcon } from "@phosphor-icons/react/ssr";
+import Link from "~/components/Link.astro";
 import Layout from "~/layouts/Layout.astro";
-import { buttonStyles } from "~/styles/button";
-import { tw } from "~/utils/tw";
 
 export const prerender = true;
 
@@ -21,10 +20,10 @@ const DESCRIPTION =
     <p class="text-neutral-400">{DESCRIPTION}</p>
 
     <div class="mt-8">
-      <a href="/" class={tw("mx-auto w-fit", buttonStyles)}>
+      <Link buttonVariant="primary" class="mx-auto w-fit" href="/">
         <ArrowLeftIcon aria-hidden className="size-4.5" weight="bold" />
         Back to Home
-      </a>
+      </Link>
     </div>
   </div>
 </Layout>

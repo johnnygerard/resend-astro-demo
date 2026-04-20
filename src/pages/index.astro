@@ -6,7 +6,7 @@ import {
   ShieldCheckIcon,
 } from "@phosphor-icons/react/ssr";
 import ContactForm from "~/components/ContactForm.astro";
-import ExternalLink from "~/components/ExternalLink.astro";
+import Link from "~/components/Link.astro";
 import Layout from "~/layouts/Layout.astro";
 import { tw } from "~/utils/tw";
 
@@ -94,7 +94,9 @@ const features = [
               { href: "https://phosphoricons.com/", label: "Phosphor Icons" },
             ].map(({ href, label }) => (
               <li>
-                <ExternalLink href={href}>{label}</ExternalLink>
+                <Link external href={href} variant="ghost">
+                  {label}
+                </Link>
               </li>
             ))
           }

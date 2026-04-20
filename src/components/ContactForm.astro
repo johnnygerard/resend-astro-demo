@@ -6,14 +6,14 @@ import {
   WarningCircleIcon,
 } from "@phosphor-icons/react/ssr";
 import { tw } from "~/utils/tw";
-import ExternalLink from "~/components/ExternalLink.astro";
+import Link from "~/components/Link.astro";
+import Button from "~/components/Button.astro";
 import {
   EMAIL_MAX_LENGTH,
   MESSAGE_MAX_LENGTH,
   MESSAGE_MIN_LENGTH,
   NAME_MAX_LENGTH,
 } from "~/validation/schemas";
-import { buttonStyles } from "~/styles/button";
 
 type Props = {
   class?: string;
@@ -65,14 +65,13 @@ const inputStyles = tw(
       </p>
     </hgroup>
     <div class="mt-6 flex flex-col gap-3">
-      <a
-        class={buttonStyles}
+      <Link
+        buttonVariant="primary"
         href="https://www.jgerard.dev/en-us/portfolio"
-        rel="noopener noreferrer"
-        target="_blank"
+        external
       >
         View portfolio
-      </a>
+      </Link>
       <button
         class={tw(
           "rounded-lg border border-neutral-700 px-5 py-2.5",
@@ -93,10 +92,8 @@ const inputStyles = tw(
       <p class={tw("text-center text-sm text-pretty text-neutral-400")}>
         This contact form requires JavaScript to operate. Please ensure that it
         is supported and enabled in your browser settings. To learn more, check
-        out <ExternalLink
-          variant="inline"
-          href="https://www.enable-javascript.com/"
-          >How to enable JavaScript in your browser</ExternalLink
+        out <Link external href="https://www.enable-javascript.com/"
+          >How to enable JavaScript in your browser</Link
         >.
       </p>
     </div>
@@ -201,13 +198,12 @@ const inputStyles = tw(
 
       <div class="space-y-5">
         {/* Submit Button */}
-        <button
+        <Button
           class={tw(
             "w-full",
             "data-[state=pending]:cursor-wait data-[state=pending]:opacity-80",
             "group group-invalid/form:cursor-not-allowed",
             "group-invalid/form:opacity-80 group-invalid/form:hover:bg-red-300",
-            buttonStyles,
           )}
           data-state="idle"
           type="submit"
@@ -226,7 +222,7 @@ const inputStyles = tw(
             className="size-4.5 animate-spin not-group-data-[state=pending]:hidden"
             weight="bold"
           />
-        </button>
+        </Button>
 
         {
           /**

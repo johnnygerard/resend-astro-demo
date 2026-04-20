@@ -1,0 +1,30 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { tw } from "~/utils/tw";
+
+export type ButtonVariant = "primary" | "secondary";
+
+type Props = HTMLAttributes<"button"> & {
+  variant?: ButtonVariant;
+};
+
+const { class: className, variant = "primary", ...attrs } = Astro.props;
+
+export const getButtonStyles = (variant: ButtonVariant): string =>
+  tw(
+    "flex items-center justify-center gap-2",
+    "rounded-lg px-5 py-2.5 text-sm font-semibold",
+    "outline-offset-1 transition active:scale-[0.98]",
+    {
+      primary: ["bg-neutral-100 text-neutral-900 hover:bg-white"],
+      secondary: [
+        "border border-neutral-700 hover:border-neutral-500",
+        "text-neutral-300 hover:text-neutral-100",
+      ],
+    }[variant],
+  );
+---
+
+<button class={tw(getButtonStyles(variant), className)} {...attrs}>
+  <slot />
+</button>
