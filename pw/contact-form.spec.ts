@@ -18,7 +18,7 @@ test("contact form submission shows success message", async ({ page }) => {
   await expect(turnstileHiddenInput).toHaveValue(/.+/);
 
   // Submit the form
-  await page.getByRole("button").click();
+  await page.getByRole("button", { name: /send/i }).click();
 
   // Expect a success message
   await expect(page.getByText("thank")).toBeVisible();
