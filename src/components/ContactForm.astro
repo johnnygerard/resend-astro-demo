@@ -322,6 +322,7 @@ const inputStyles = tw(
 
     reloadButton.addEventListener("click", (): void => {
       form.reset();
+      form.inert = false;
       hide(successMessage);
     });
 
@@ -371,6 +372,7 @@ const inputStyles = tw(
 
         if (data) {
           show(successMessage);
+          form.inert = true;
           return;
         }
 
