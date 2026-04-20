@@ -16,14 +16,17 @@ export const server = {
       message: messageSchema,
       "cf-turnstile-response": z.string().min(1),
     }),
-    handler: async (input): Promise<CreateEmailResponseSuccess> => {
+    handler: async (input, context): Promise<CreateEmailResponseSuccess> => {
       try {
         if (input.website) {
           console.info("Received non-empty honeypot field.");
           return { id: uuid() };
         }
 
-        await verifyTurnstileToken(input["cf-turnstile-response"]);
+        await verifyTurnstileToken(
+          input["cf-turnstile-response"],
+          context.clientAddress,
+        );
 
         return await sendEmail({
           from: `John <hello@resend.jgerard.dev>`,

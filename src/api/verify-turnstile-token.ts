@@ -31,8 +31,12 @@ const siteverifySchema = z
  * Verify the Cloudflare Turnstile token using the Siteverify API.
  * @see https://developers.cloudflare.com/turnstile/get-started/server-side-validation/
  * @param token - The Turnstile token to verify
+ * @param remoteip - The visitor's IP address
  */
-export const verifyTurnstileToken = async (token: string): Promise<void> => {
+export const verifyTurnstileToken = async (
+  token: string,
+  remoteip: string,
+): Promise<void> => {
   let siteverifyResponse: Response;
 
   try {
@@ -44,6 +48,7 @@ export const verifyTurnstileToken = async (token: string): Promise<void> => {
         body: JSON.stringify({
           secret: import.meta.env.CF_TURNSTILE_SECRET_KEY,
           response: token,
+          remoteip,
         }),
         signal: AbortSignal.timeout(5000),
       },
