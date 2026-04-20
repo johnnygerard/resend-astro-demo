@@ -49,6 +49,7 @@ const inputStyles = tw(
     class={tw(
       "absolute inset-0 grid place-content-center text-center",
       "invisible opacity-0 transition-opacity duration-300",
+      "bg-neutral-900/90 backdrop-blur-xl",
     )}
     id="contact-success"
   >
@@ -60,13 +61,31 @@ const inputStyles = tw(
     <hgroup class="mt-4 max-w-100">
       <h2 class="text-xl font-semibold text-neutral-100">Message Sent!</h2>
       <p class="mt-1.5 text-sm text-neutral-400">
-        Thanks for trying out this demo! For more frontend engineering projects,
-        check out my <ExternalLink
-          variant="inline"
-          href="https://www.jgerard.dev/en-us/portfolio">portfolio</ExternalLink
-        >.
+        Thanks for trying out this demo!
       </p>
     </hgroup>
+    <div class="mt-6 flex flex-col gap-3">
+      <a
+        class={buttonStyles}
+        href="https://www.jgerard.dev/en-us/portfolio"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        View portfolio
+      </a>
+      <button
+        class={tw(
+          "rounded-lg border border-neutral-700 px-5 py-2.5",
+          "text-sm font-semibold text-neutral-300",
+          "transition hover:border-neutral-500 hover:text-neutral-100",
+          "outline-offset-1 active:scale-[0.98]",
+        )}
+        id="contact-reload"
+        type="button"
+      >
+        Send another message
+      </button>
+    </div>
   </div>
 
   <noscript>
@@ -303,6 +322,15 @@ const inputStyles = tw(
       document.getElementById("contact-success"),
     );
 
+    const reloadButton = assertNotNull(
+      document.getElementById("contact-reload"),
+    );
+
+    reloadButton.addEventListener("click", (): void => {
+      form.reset();
+      hide(successMessage);
+    });
+
     const nameInput = assertInstanceOf(
       document.getElementById("contact-name"),
       HTMLInputElement,
@@ -348,7 +376,6 @@ const inputStyles = tw(
         const { data, error } = await actions.submitContactForm(formData);
 
         if (data) {
-          hide(form);
           show(successMessage);
           return;
         }
