@@ -36,6 +36,6 @@
 }
 
 /* Prevent negative space below the widget */
-.cf-turnstile > div {
+.cf-turnstile > div:first-child {
   display: flex;
 }
