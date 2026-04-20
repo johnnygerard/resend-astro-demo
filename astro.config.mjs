@@ -3,7 +3,6 @@ import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, fontProviders } from "astro/config";
-import { visualizer } from "rollup-plugin-visualizer";
 
 // https://docs.astro.build/en/reference/configuration-reference/
 export default defineConfig({
@@ -28,14 +27,7 @@ export default defineConfig({
   site: "https://resend.jgerard.dev",
   trailingSlash: "never",
   vite: {
-    plugins: [
-      tailwindcss(),
-      // @ts-expect-error https://github.com/btd/rollup-plugin-visualizer/issues/127
-      visualizer({
-        emitFile: true,
-        filename: "stats.html",
-      }),
-    ],
+    plugins: [tailwindcss()],
     ssr: {
       optimizeDeps: {
         exclude: ["astro/actions/runtime/entrypoints/server.js"],
