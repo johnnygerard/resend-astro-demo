@@ -1,7 +1,6 @@
 import { v4 as uuid } from "@lukeed/uuid";
 import { z } from "astro/zod";
 import { ActionError, defineAction } from "astro:actions";
-import { type CreateEmailResponseSuccess } from "resend";
 import { sendEmail } from "~/api/send-email";
 import { verifyTurnstileToken } from "~/api/verify-turnstile-token";
 import { emailSchema, messageSchema, nameSchema } from "~/validation/schemas";
@@ -16,7 +15,7 @@ export const server = {
       message: messageSchema,
       "cf-turnstile-response": z.string().min(1),
     }),
-    handler: async (input, context): Promise<CreateEmailResponseSuccess> => {
+    handler: async (input, context) => {
       try {
         if (input.website) {
           console.info("Received non-empty honeypot field.");

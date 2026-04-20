@@ -1,6 +1,5 @@
 import { z } from "astro/zod";
 import { ActionError } from "astro:actions";
-import { type CreateEmailResponseSuccess, type ErrorResponse } from "resend";
 
 const successResponseSchema = z.object({ id: z.string() });
 
@@ -63,7 +62,7 @@ export const sendEmail = async (body: {
   to: string | string[];
   subject: string;
   text: string;
-}): Promise<CreateEmailResponseSuccess> => {
+}): Promise<z.infer<typeof successResponseSchema>> => {
   let response: Response;
 
   try {
@@ -83,10 +82,7 @@ export const sendEmail = async (body: {
   if (response.ok)
     return await parseAndValidateJsonBody(response, successResponseSchema);
 
-  const error: ErrorResponse = await parseAndValidateJsonBody(
-    response,
-    errorResponseSchema,
-  );
+  const error = await parseAndValidateJsonBody(response, errorResponseSchema);
 
   if (error.statusCode === ActionError.codeToStatus("TOO_MANY_REQUESTS")) {
     console.error("Resend API rate limit or quota exceeded.", error);
