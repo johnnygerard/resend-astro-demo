@@ -23,7 +23,7 @@ const fieldStyles = tw("flex flex-col gap-1.5");
 const labelStyles = tw("text-sm font-medium text-neutral-300");
 const errorStyles = tw(
   "min-h-lh text-sm text-red-400",
-  "not-peer-user-invalid:invisible not-peer-user-invalid:opacity-0",
+  "duration-300 not-peer-user-invalid:invisible not-peer-user-invalid:opacity-0",
 );
 const inputStyles = tw(
   "peer rounded-lg border border-neutral-700 bg-neutral-800 px-3.5 py-2.5",
@@ -46,7 +46,7 @@ const inputStyles = tw(
     aria-live="polite"
     class={tw(
       "absolute inset-0 grid place-content-center text-center",
-      "invisible opacity-0 transition-opacity duration-300",
+      "invisible opacity-0 duration-300",
       "bg-neutral-900/90 backdrop-blur-xl",
     )}
     id="contact-success"
@@ -97,11 +97,7 @@ const inputStyles = tw(
     </div>
   </noscript>
 
-  <form
-    class="group/form transition-opacity duration-300 noscript:invisible"
-    name="contact"
-    novalidate
-  >
+  <form class="group/form noscript:invisible" name="contact" novalidate>
     <h2 class="mb-6 text-xl font-semibold text-neutral-100">Get in Touch</h2>
 
     {/* Honeypot field - hidden from real users, filled by bots */}
@@ -179,7 +175,7 @@ const inputStyles = tw(
         class={tw(
           "flex items-center gap-2 rounded-lg border border-red-500/30",
           "bg-red-500/10 px-4 py-3 text-sm text-red-400",
-          "invisible opacity-0 transition-opacity duration-300",
+          "invisible opacity-0 duration-300",
         )}
         id="contact-server-error"
         role="alert"
@@ -257,7 +253,7 @@ const inputStyles = tw(
     field: HTMLInputElement | HTMLTextAreaElement,
   ) => {
     return (message: string): void => {
-      errorElement.textContent = message;
+      if (message) errorElement.textContent = message;
       field.setCustomValidity(message);
       field.setAttribute("aria-invalid", Boolean(message).toString());
     };
