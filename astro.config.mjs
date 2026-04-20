@@ -28,5 +28,10 @@ export default defineConfig({
   trailingSlash: "never",
   vite: {
     plugins: [tailwindcss()],
+    ssr: {
+      optimizeDeps: {
+        exclude: ["astro/actions/runtime/entrypoints/server.js"],
+      },
+    },
   },
 });
