@@ -19,12 +19,12 @@ Note that while SSR is required for the Astro server action to work, the homepag
 
 ### Backend
 
-- **Hosting**: [Cloudflare Workers](https://workers.cloudflare.com/)
+- **Serverless**: [Cloudflare Workers](https://workers.cloudflare.com/)
 - **Email API**: [Resend](https://resend.com/features/email-api)
 
 ### Security
 
-- **Spam protection**: [Cloudflare Turnstile](https://www.cloudflare.com/application-services/products/turnstile/)
+- **Bot detection**: [Cloudflare Turnstile](https://www.cloudflare.com/application-services/products/turnstile/)
 
 ### Quality Assurance
 
