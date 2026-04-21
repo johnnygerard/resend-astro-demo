@@ -5,6 +5,7 @@ import { PaperPlaneTiltIcon } from "@phosphor-icons/react/dist/ssr/PaperPlaneTil
 import { WarningCircleIcon } from "@phosphor-icons/react/dist/ssr/WarningCircle";
 import Button from "~/components/Button.astro";
 import Link from "~/components/Link.astro";
+import { getVariable } from "~/utils/get-variable";
 import { tw } from "~/utils/tw";
 import {
   EMAIL_MAX_LENGTH,
@@ -229,7 +230,7 @@ const inputStyles = tw(
             class="cf-turnstile"
             data-appearance="always"
             data-language="en-us"
-            data-sitekey={import.meta.env.PUBLIC_CF_TURNSTILE_SITEKEY}
+            data-sitekey={getVariable("PUBLIC_CF_TURNSTILE_SITEKEY")}
             data-size="flexible"
             data-theme="dark"
             style="height: 65px;"
