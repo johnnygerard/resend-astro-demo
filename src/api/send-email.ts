@@ -1,5 +1,6 @@
 import { z } from "astro/zod";
 import { ActionError } from "astro:actions";
+import { parseAndValidateJsonBody } from "~/utils/parse-and-validate-json-body";
 
 const successResponseSchema = z.object({ id: z.string() });
 
@@ -32,25 +33,6 @@ const errorResponseSchema = z.object({
   ]),
 });
 
-const parseAndValidateJsonBody = async <T extends z.ZodType>(
-  response: Response,
-  schema: T,
-): Promise<z.infer<T>> => {
-  let value: unknown;
-
-  try {
-    value = await response.json();
-  } catch (e) {
-    throw new Error("Unable to parse JSON payload from Resend API.", {
-      cause: e,
-    });
-  }
-
-  const { success, data, error } = schema.safeParse(value);
-  if (success) return data;
-  throw new Error("Invalid JSON payload from Resend API", { cause: error });
-};
-
 /**
  * Send an email using the Resend API.
  * @param body The email payload containing sender, recipient, subject, and text content.
@@ -80,9 +62,17 @@ export const sendEmail = async (body: {
   }
 
   if (response.ok)
-    return await parseAndValidateJsonBody(response, successResponseSchema);
+    return await parseAndValidateJsonBody(
+      response,
+      successResponseSchema,
+      "Resend API",
+    );
 
-  const error = await parseAndValidateJsonBody(response, errorResponseSchema);
+  const error = await parseAndValidateJsonBody(
+    response,
+    errorResponseSchema,
+    "Resend API",
+  );
 
   if (error.statusCode === ActionError.codeToStatus("TOO_MANY_REQUESTS")) {
     console.error("Resend API rate limit or quota exceeded.", error);

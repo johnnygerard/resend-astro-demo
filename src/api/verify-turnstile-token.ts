@@ -1,5 +1,6 @@
 import { z } from "astro/zod";
 import { ActionError } from "astro:actions";
+import { parseAndValidateJsonBody } from "~/utils/parse-and-validate-json-body";
 
 // https://developers.cloudflare.com/turnstile/get-started/server-side-validation/#api-response-format
 const siteverifySchema = z
@@ -37,10 +38,10 @@ export const verifyTurnstileToken = async (
   token: string,
   remoteip: string,
 ): Promise<void> => {
-  let siteverifyResponse: Response;
+  let response: Response;
 
   try {
-    siteverifyResponse = await fetch(
+    response = await fetch(
       "https://challenges.cloudflare.com/turnstile/v0/siteverify",
       {
         method: "POST",
@@ -57,23 +58,16 @@ export const verifyTurnstileToken = async (
     throw new Error("Fetch request to Siteverify API failed.", { cause: e });
   }
 
-  if (!siteverifyResponse.ok)
+  if (!response.ok)
     throw new Error(
-      `Siteverify API request failed with status: ${siteverifyResponse.status} ${siteverifyResponse.statusText}`,
+      `Siteverify API request failed with status: ${response.status} ${response.statusText}`,
     );
 
-  let siteverifyResult: z.infer<typeof siteverifySchema>;
-
-  try {
-    siteverifyResult = siteverifySchema.parse(await siteverifyResponse.json());
-  } catch (e) {
-    throw new Error(
-      e instanceof z.ZodError
-        ? "Siteverify API response failed schema validation."
-        : "Unable to parse JSON payload from Siteverify API response.",
-      { cause: e },
-    );
-  }
+  const siteverifyResult = await parseAndValidateJsonBody(
+    response,
+    siteverifySchema,
+    "Siteverify API",
+  );
 
   if (siteverifyResult.success) return;
 
