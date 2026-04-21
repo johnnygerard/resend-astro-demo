@@ -34,3 +34,8 @@
 @theme inline {
   --font-sans: var(--font-geist);
 }
+
+/* Prevent negative space below the widget */
+.cf-turnstile > div:first-child {
+  display: flex;
+}

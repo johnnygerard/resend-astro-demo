@@ -7,6 +7,14 @@
     "cloudflare-docs": {
       "type": "http",
       "url": "https://docs.mcp.cloudflare.com/mcp"
+    },
+    "resend": {
+      "type": "http",
+      "url": "https://resend.com/docs/mcp"
+    },
+    "zod": {
+      "type": "http",
+      "url": "https://mcp.inkeep.com/zod/mcp"
     }
   }
 }

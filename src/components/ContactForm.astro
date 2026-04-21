@@ -1,0 +1,418 @@
+---
+import { CheckCircleIcon } from "@phosphor-icons/react/dist/ssr/CheckCircle";
+import { CircleNotchIcon } from "@phosphor-icons/react/dist/ssr/CircleNotch";
+import { PaperPlaneTiltIcon } from "@phosphor-icons/react/dist/ssr/PaperPlaneTilt";
+import { WarningCircleIcon } from "@phosphor-icons/react/dist/ssr/WarningCircle";
+import Button from "~/components/Button.astro";
+import Link from "~/components/Link.astro";
+import { tw } from "~/utils/tw";
+import {
+  EMAIL_MAX_LENGTH,
+  MESSAGE_MAX_LENGTH,
+  MESSAGE_MIN_LENGTH,
+  NAME_MAX_LENGTH,
+} from "~/validation/schemas";
+
+type Props = {
+  class?: string;
+};
+
+const { class: className } = Astro.props;
+
+const fieldStyles = tw("flex flex-col gap-1.5");
+const labelStyles = tw("text-sm font-medium text-neutral-300");
+const errorStyles = tw(
+  "min-h-lh text-sm text-red-400",
+  "duration-300 not-peer-user-invalid:invisible not-peer-user-invalid:opacity-0",
+);
+const inputStyles = tw(
+  "peer rounded-lg border border-neutral-700 bg-neutral-800 px-3.5 py-2.5",
+  "text-sm text-neutral-100 placeholder:text-neutral-500",
+  "transition-colors hover:not-user-invalid:border-neutral-500",
+  "user-invalid:border-red-500 user-invalid:focus-visible:outline-red-400",
+  "-outline-offset-1",
+);
+---
+
+<div
+  class={tw(
+    "w-full overflow-hidden bg-neutral-900/70 p-4 sm:p-8",
+    "relative rounded-2xl border border-neutral-800 shadow-xl",
+    className,
+  )}
+>
+  {/* Success Message */}
+  <div
+    aria-live="polite"
+    class={tw(
+      "absolute inset-0 grid place-content-center text-center",
+      "invisible opacity-0 duration-300",
+      "bg-neutral-900/90 backdrop-blur-xl",
+    )}
+    id="contact-success"
+  >
+    <CheckCircleIcon
+      aria-hidden
+      className="mx-auto size-12 text-green-400"
+      weight="fill"
+    />
+    <hgroup class="mt-4 max-w-100">
+      <h2 class="text-xl font-semibold text-neutral-100">Message Sent!</h2>
+      <p class="mt-1.5 text-sm text-neutral-400">
+        Thanks for trying out this demo!
+      </p>
+    </hgroup>
+    <div class="mt-6 flex flex-col gap-3">
+      <Link
+        buttonVariant="primary"
+        href="https://www.jgerard.dev/en-us/portfolio"
+        external
+      >
+        View portfolio
+      </Link>
+      <button
+        class={tw(
+          "rounded-lg border border-neutral-700 px-5 py-2.5",
+          "text-sm font-semibold text-neutral-300",
+          "transition hover:border-neutral-500 hover:text-neutral-100",
+          "outline-offset-1 active:scale-[0.98]",
+        )}
+        id="contact-reload"
+        type="button"
+      >
+        Send another message
+      </button>
+    </div>
+  </div>
+
+  <noscript>
+    <div class="absolute inset-0 grid place-content-center p-8">
+      <p class={tw("text-center text-sm text-pretty text-neutral-400")}>
+        This contact form requires JavaScript to operate. Please ensure that it
+        is supported and enabled in your browser settings. To learn more, check
+        out <Link external href="https://www.enable-javascript.com/"
+          >How to enable JavaScript in your browser</Link
+        >.
+      </p>
+    </div>
+  </noscript>
+
+  <form class="group/form noscript:invisible" name="contact" novalidate>
+    <h2 class="mb-6 text-xl font-semibold text-neutral-100">Get in Touch</h2>
+
+    {/* Honeypot field - hidden from real users, filled by bots */}
+    <div aria-hidden="true" class="sr-only">
+      <label for="contact-website">Website</label>
+      <input
+        autocomplete="off"
+        id="contact-website"
+        name="website"
+        tabindex={-1}
+        type="text"
+      />
+    </div>
+
+    <div class="flex flex-col gap-5">
+      {/* Name Field */}
+      <div class={fieldStyles}>
+        <label class={labelStyles} for="contact-name">Name</label>
+        <input
+          aria-errormessage="contact-name-error"
+          autocomplete="name"
+          class={inputStyles}
+          id="contact-name"
+          maxlength={NAME_MAX_LENGTH}
+          name="name"
+          placeholder="e.g. John Smith"
+          required
+          spellcheck="false"
+          type="text"
+        />
+        <p aria-live="polite" class={errorStyles} id="contact-name-error"></p>
+      </div>
+
+      {/* Email Field */}
+      <div class={fieldStyles}>
+        <label class={labelStyles} for="contact-email">Email</label>
+        <input
+          aria-errormessage="contact-email-error"
+          autocomplete="email"
+          class={inputStyles}
+          id="contact-email"
+          maxlength={EMAIL_MAX_LENGTH}
+          name="email"
+          placeholder="e.g. smith@example.com"
+          required
+          spellcheck="false"
+          type="email"
+        />
+        <p aria-live="polite" class={errorStyles} id="contact-email-error"></p>
+      </div>
+
+      {/* Message Field */}
+      <div class={fieldStyles}>
+        <label class={labelStyles} for="contact-message">Message</label>
+        <textarea
+          aria-errormessage="contact-message-error"
+          class={tw(
+            inputStyles,
+            "field-sizing-content min-h-[calc(6lh+1.25rem+2px)]",
+            "resize-y supports-[field-sizing:content]:resize-none",
+          )}
+          id="contact-message"
+          maxlength={MESSAGE_MAX_LENGTH}
+          minlength={MESSAGE_MIN_LENGTH}
+          name="message"
+          placeholder="Tell us what's on your mind..."
+          required></textarea>
+        <p aria-live="polite" class={errorStyles} id="contact-message-error">
+        </p>
+      </div>
+
+      {/* Server Error Banner */}
+      <div
+        aria-live="polite"
+        class={tw(
+          "flex items-center gap-2 rounded-lg border border-red-500/30",
+          "bg-red-500/10 px-4 py-3 text-sm text-red-400",
+          "invisible opacity-0 duration-300",
+        )}
+        id="contact-server-error"
+        role="alert"
+      >
+        <WarningCircleIcon
+          aria-hidden
+          className="size-5 shrink-0"
+          weight="fill"
+        />
+        <p id="contact-server-error-message">
+          Something went wrong. Please try again later.
+        </p>
+      </div>
+
+      <div class="space-y-5">
+        {/* Submit Button */}
+        <Button
+          class={tw(
+            "w-full",
+            "data-[state=pending]:cursor-wait data-[state=pending]:opacity-80",
+            "group group-invalid/form:cursor-not-allowed",
+            "group-invalid/form:opacity-80 group-invalid/form:hover:bg-red-300",
+          )}
+          data-state="idle"
+          type="submit"
+        >
+          {/* Idle State */}
+          <span class="not-group-data-[state=idle]:hidden">Send message</span>
+          <PaperPlaneTiltIcon
+            aria-hidden
+            className="size-4.5 not-group-data-[state=idle]:hidden"
+            weight="fill"
+          />
+          {/* Pending State */}
+          <span class="not-group-data-[state=pending]:hidden">Sending...</span>
+          <CircleNotchIcon
+            aria-hidden
+            className="size-4.5 animate-spin not-group-data-[state=pending]:hidden"
+            weight="bold"
+          />
+        </Button>
+
+        {
+          /**
+           * Cloudflare Turnstile Widget
+           * @see https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/
+           */
+        }
+        <div class="overflow-x-auto [scrollbar-width:thin]">
+          <div
+            class="cf-turnstile"
+            data-appearance="always"
+            data-language="en-us"
+            data-sitekey={import.meta.env.PUBLIC_CF_TURNSTILE_SITEKEY}
+            data-size="flexible"
+            data-theme="dark"
+            style="height: 65px;"
+          >
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  import { actions, isInputError } from "astro:actions";
+  import type { z } from "zod/mini";
+  import { assertInstanceOf } from "~/utils/assert-instance-of";
+  import { assertNotNull } from "~/utils/assert-not-null";
+  import { emailSchema, messageSchema, nameSchema } from "~/validation/schemas";
+
+  const getErrorSetter = (
+    errorElement: HTMLElement,
+    field: HTMLInputElement | HTMLTextAreaElement,
+  ) => {
+    return (message: string): void => {
+      if (message) errorElement.textContent = message;
+      field.setCustomValidity(message);
+      field.setAttribute("aria-invalid", Boolean(message).toString());
+    };
+  };
+
+  // Reuse server-side Zod schemas for client-side validation
+  const addValidationHandlers = (
+    field: HTMLInputElement | HTMLTextAreaElement,
+    errorElement: HTMLElement,
+    schema: z.ZodMiniString,
+  ): void => {
+    const setError = getErrorSetter(errorElement, field);
+
+    const validate = (): void => {
+      const { error } = schema.safeParse(field.value);
+      setError(error?.issues[0]?.message ?? "");
+    };
+
+    field.addEventListener("input", validate);
+    field.addEventListener("invalid", validate);
+  };
+
+  const hide = (element: Element): void => {
+    element.classList.add("invisible", "opacity-0");
+  };
+
+  const show = (element: Element): void => {
+    element.classList.remove("invisible", "opacity-0");
+  };
+
+  try {
+    const form = assertNotNull(document.forms.namedItem("contact"));
+
+    const submitButton = assertInstanceOf(
+      form.querySelector('button[type="submit"]'),
+      HTMLButtonElement,
+    );
+
+    const setSubmitState = (state: "idle" | "pending"): void => {
+      submitButton.dataset.state = state;
+    };
+
+    const serverError = assertNotNull(
+      document.getElementById("contact-server-error"),
+    );
+    const serverErrorMessage = assertNotNull(
+      document.getElementById("contact-server-error-message"),
+    );
+
+    const displayServerError = (message: string): void => {
+      serverErrorMessage.textContent = message;
+      show(serverError);
+    };
+
+    const successMessage = assertNotNull(
+      document.getElementById("contact-success"),
+    );
+
+    const reloadButton = assertNotNull(
+      document.getElementById("contact-reload"),
+    );
+
+    reloadButton.addEventListener("click", (): void => {
+      form.reset();
+      form.inert = false;
+      hide(successMessage);
+    });
+
+    const nameInput = assertInstanceOf(
+      document.getElementById("contact-name"),
+      HTMLInputElement,
+    );
+
+    const emailInput = assertInstanceOf(
+      document.getElementById("contact-email"),
+      HTMLInputElement,
+    );
+
+    const messageInput = assertInstanceOf(
+      document.getElementById("contact-message"),
+      HTMLTextAreaElement,
+    );
+
+    const nameError = assertNotNull(
+      document.getElementById("contact-name-error"),
+    );
+    const emailError = assertNotNull(
+      document.getElementById("contact-email-error"),
+    );
+    const messageError = assertNotNull(
+      document.getElementById("contact-message-error"),
+    );
+
+    const setNameError = getErrorSetter(nameError, nameInput);
+    const setEmailError = getErrorSetter(emailError, emailInput);
+    const setMessageError = getErrorSetter(messageError, messageInput);
+
+    addValidationHandlers(nameInput, nameError, nameSchema);
+    addValidationHandlers(emailInput, emailError, emailSchema);
+    addValidationHandlers(messageInput, messageError, messageSchema);
+
+    form.addEventListener("submit", async (event): Promise<void> => {
+      event.preventDefault();
+      if (!form.checkValidity()) return; // Prevent invalid submissions
+      if (submitButton.dataset.state === "pending") return; // Prevent duplicate submissions
+
+      try {
+        setSubmitState("pending");
+        hide(serverError);
+        const formData = new FormData(form);
+        const [{ data, error }] = await Promise.all([
+          actions.submitContactForm(formData),
+          // Avoid flash of pending state on the submit button.
+          new Promise((resolve) => setTimeout(resolve, 300)),
+        ]);
+
+        if (data) {
+          show(successMessage);
+          form.inert = true;
+          return;
+        }
+
+        if (isInputError(error)) {
+          const {
+            "cf-turnstile-response": cfTurnstileResponse,
+            name,
+            email,
+            message,
+          } = error.fields;
+
+          if (cfTurnstileResponse?.[0]) {
+            displayServerError("Security challenge failed. Please try again.");
+            return;
+          }
+
+          if (name?.[0]) setNameError(name.join(" "));
+          if (email?.[0]) setEmailError(email.join(" "));
+          if (message?.[0]) setMessageError(message.join(" "));
+
+          // Focus the first invalid field
+          if (name?.[0]) nameInput.focus();
+          else if (email?.[0]) emailInput.focus();
+          else if (message?.[0]) messageInput.focus();
+
+          return;
+        }
+
+        console.error(error);
+        displayServerError(error.message);
+      } catch (error) {
+        console.error("Error during form submission:", error);
+        displayServerError(
+          "An unexpected error occurred. Please try again later.",
+        );
+      } finally {
+        setSubmitState("idle");
+      }
+    });
+  } catch (error) {
+    console.error("Failed to initialize contact form:", error);
+  }
+</script>

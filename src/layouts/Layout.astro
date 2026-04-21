@@ -7,15 +7,16 @@ import { tw } from "~/utils/tw";
 type Props = {
   title: string;
   description: string;
+  turnstileEnabled?: boolean;
   indexed?: boolean;
 };
 
-const { title, description, indexed = true } = Astro.props;
-
-const starterStyles = tw(
-  "bg-neutral-950 font-sans text-base text-neutral-100",
-  "selection:bg-neutral-200 selection:text-neutral-900",
-);
+const {
+  title,
+  description,
+  turnstileEnabled = false,
+  indexed = true,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -23,6 +24,16 @@ const starterStyles = tw(
   <head>
     <meta charset="utf-8" />
     <Font cssVariable="--font-geist" preload />
+    {
+      turnstileEnabled && (
+        <script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          async
+          defer
+          is:inline
+        />
+      )
+    }
     <Favicon />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
@@ -34,11 +45,16 @@ const starterStyles = tw(
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
   </head>
-  <body class={starterStyles}>
+  <body
+    class={tw(
+      "bg-neutral-950 font-sans text-base text-neutral-100",
+      "selection:bg-neutral-200 selection:text-neutral-900",
+    )}
+  >
     {/* This wrapper prevents a body overflow in mobile browsers. */}
     <div class="flex min-h-screen flex-col">
       {/* <Header /> */}
-      <main class="grid flex-1 items-center">
+      <main class="grid flex-1 items-center px-4 py-8 sm:px-6 sm:py-10">
         <slot />
       </main>
       {/* <Footer /> */}

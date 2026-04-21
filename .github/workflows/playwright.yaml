@@ -1,11 +1,12 @@
-name: Playwright Tests
+name: Playwright
 on:
   pull_request:
     branches: [main]
 jobs:
-  test:
+  playwright:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -13,13 +14,18 @@ jobs:
       - name: Initialize environment
         uses: ./.github/actions/init
 
-      - name: Install Playwright Browsers
+      - name: Install Playwright browsers
         run: npx playwright install --with-deps
+
+      - name: Build project
+        run: npm run build:test
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
       - name: Run Playwright tests
         run: npm run pw:test
 
-      - name: Upload Playwright Report
+      - name: Upload Playwright report
         uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
         with:

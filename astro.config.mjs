@@ -1,21 +1,14 @@
 import cloudflare from "@astrojs/cloudflare";
+import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig, envField, fontProviders } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 
 // https://docs.astro.build/en/reference/configuration-reference/
 export default defineConfig({
   adapter: cloudflare(),
   build: {
     format: "file",
-  },
-  env: {
-    schema: {
-      RESEND_API_KEY: envField.string({
-        access: "secret",
-        context: "server",
-      }),
-    },
   },
   fonts: [
     // Geist: sans-serif typeface
@@ -29,10 +22,16 @@ export default defineConfig({
       weights: ["100 900"],
     },
   ],
-  integrations: [sitemap()],
-  site: "https://resend-astro-demo.mail-25a.workers.dev",
+  integrations: [react(), sitemap()],
+  output: "server",
+  site: "https://resend.jgerard.dev",
   trailingSlash: "never",
   vite: {
     plugins: [tailwindcss()],
+    ssr: {
+      optimizeDeps: {
+        exclude: ["astro/actions/runtime/entrypoints/server.js"],
+      },
+    },
   },
 });

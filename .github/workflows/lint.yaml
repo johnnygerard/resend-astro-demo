@@ -1,4 +1,4 @@
-name: Lint Check
+name: Lint
 on:
   pull_request:
     branches: [main]
@@ -12,5 +12,5 @@ jobs:
       - name: Initialize environment
         uses: ./.github/actions/init
 
-      - name: Check lint rules
+      - name: Run linter
         run: npm run lint

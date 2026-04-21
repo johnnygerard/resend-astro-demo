@@ -1,12 +1,13 @@
-# Astro 6 Starter
-
-This starter repository facilitates the creation of new Astro projects using the configuration described below.
-
-To learn how to use a GitHub template repository, check
-out [Creating a repository from a template](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+# Resend Demo with Astro
 
 ![project status](https://img.shields.io/badge/project_status-active-success?style=for-the-badge)
-[![live site](https://img.shields.io/badge/live_site-blue?style=for-the-badge)](https://resend-astro-demo.mail-25a.workers.dev/)
+[![live site](https://img.shields.io/badge/live_site-blue?style=for-the-badge)](https://resend.jgerard.dev)
+
+## Overview
+
+This project showcases a basic contact form built with Astro and hosted on Cloudflare Workers. It serves as a demonstration of how to integrate the Resend API for sending transactional emails from a serverless environment.
+
+Note that while SSR is required for the Astro server action to work, the homepage and the 404 page are prerendered (SSG).
 
 ## Tech Stack
 
@@ -14,10 +15,16 @@ out [Creating a repository from a template](https://docs.github.com/en/repositor
 
 - **Framework**: [Astro 6](https://astro.build/)
 - **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Icon library**: [Phosphor Icons](https://phosphoricons.com/)
 
 ### Backend
 
 - **Hosting**: [Cloudflare Workers](https://workers.cloudflare.com/)
+- **Email API**: [Resend](https://resend.com/features/email-api)
+
+### Security
+
+- **Spam protection**: [Cloudflare Turnstile](https://www.cloudflare.com/application-services/products/turnstile/)
 
 ### Quality Assurance
 

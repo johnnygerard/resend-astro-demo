@@ -1,0 +1,40 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { clsx } from "clsx";
+import { type ButtonVariant, getButtonStyles } from "~/components/Button.astro";
+import { tw } from "~/utils/tw";
+
+type Props = HTMLAttributes<"a"> & {
+  buttonVariant?: ButtonVariant;
+  external?: boolean;
+  variant?: "inline" | "ghost";
+};
+
+const {
+  buttonVariant,
+  class: className,
+  external,
+  rel,
+  target = external ? "_blank" : null,
+  variant = "inline",
+  ...attrs
+} = Astro.props;
+---
+
+<a
+  class={tw(
+    buttonVariant
+      ? getButtonStyles(buttonVariant)
+      : [
+          "rounded-sm transition-colors",
+          {
+            inline: "text-neutral-400 underline hover:text-neutral-200",
+            ghost: "-mx-1 px-1 hover:text-blue-400",
+          }[variant],
+        ],
+    className,
+  )}
+  target={target}
+  rel={clsx(external && "noopener noreferrer", rel) || null}
+  {...attrs}><slot /></a
+>

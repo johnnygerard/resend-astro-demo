@@ -1,11 +1,107 @@
 ---
-import Starter from "~/components/starter/Starter.astro";
+import { CloudIcon } from "@phosphor-icons/react/dist/ssr/Cloud";
+import { EnvelopeSimpleIcon } from "@phosphor-icons/react/dist/ssr/EnvelopeSimple";
+import { PaletteIcon } from "@phosphor-icons/react/dist/ssr/Palette";
+import { ShieldCheckIcon } from "@phosphor-icons/react/dist/ssr/ShieldCheck";
+import ContactForm from "~/components/ContactForm.astro";
+import Link from "~/components/Link.astro";
 import Layout from "~/layouts/Layout.astro";
+import { tw } from "~/utils/tw";
+
+export const prerender = true;
+
+const title = "Astro & Resend Integration";
+const description =
+  "A production-ready contact form built for serverless email delivery using Astro, Resend, and Cloudflare Workers.";
+
+const features = [
+  {
+    icon: EnvelopeSimpleIcon,
+    title: "Email Delivery",
+    description: "Powered by Resend's Node.js SDK for seamless integration.",
+  },
+  {
+    icon: CloudIcon,
+    title: "Serverless",
+    description: "Runs on Cloudflare Workers for low-latency global access.",
+  },
+  {
+    icon: PaletteIcon,
+    title: "Styled with Care",
+    description: "Crafted with Tailwind CSS and Phosphor Icons.",
+  },
+  {
+    icon: ShieldCheckIcon,
+    title: "Spam Protected",
+    description: "Cloudflare Turnstile and a honeypot help filter out bots.",
+  },
+];
 ---
 
-<Layout
-  title="Astro 6 Starter"
-  description="A lightweight Astro 6 starter with Tailwind CSS 4 and a production-ready Cloudflare Workers setup."
->
-  <Starter />
+<Layout title={title} description={description} turnstileEnabled>
+  <section
+    class={tw(
+      "mx-auto grid max-w-lg gap-10",
+      "lg:max-w-5xl lg:grid-cols-2 lg:gap-x-16",
+    )}
+  >
+    <div class="flex flex-col gap-8 lg:pt-8">
+      <hgroup class="space-y-4 text-center lg:text-left">
+        <h1
+          class="text-3xl font-semibold tracking-tight text-neutral-50 sm:text-4xl"
+        >
+          {title}
+        </h1>
+        <p class="text-sm text-neutral-400 sm:text-base">
+          {description}
+        </p>
+      </hgroup>
+
+      <div class="grid gap-4 min-[30rem]:grid-cols-2">
+        {
+          features.map(({ icon: Icon, title, description }) => (
+            <article class="rounded-xl border border-neutral-800 bg-neutral-900/50 p-4">
+              <Icon
+                aria-hidden
+                className="size-6 text-blue-400"
+                weight="fill"
+              />
+              <h2 class="mt-2 text-sm font-medium text-neutral-200">{title}</h2>
+              <p class="mt-1 text-xs text-neutral-400">{description}</p>
+            </article>
+          ))
+        }
+      </div>
+
+      <nav aria-label="Related links">
+        <ul
+          class={tw(
+            "flex flex-wrap justify-center gap-x-4 gap-y-2 lg:justify-start",
+            "text-sm text-neutral-400",
+          )}
+        >
+          {
+            [
+              { href: "https://astro.build/", label: "Astro" },
+              { href: "https://resend.com/", label: "Resend" },
+              {
+                href: "https://workers.cloudflare.com/",
+                label: "Cloudflare Workers",
+              },
+              { href: "https://tailwindcss.com/", label: "Tailwind CSS" },
+              { href: "https://phosphoricons.com/", label: "Phosphor Icons" },
+            ].map(({ href, label }) => (
+              <li>
+                <Link external href={href} variant="ghost">
+                  {label}
+                </Link>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <ContactForm />
+  </section>
 </Layout>

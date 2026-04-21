@@ -1,4 +1,4 @@
-name: Build Check
+name: Build
 on:
   pull_request:
     branches: [main]
@@ -12,5 +12,10 @@ jobs:
       - name: Initialize environment
         uses: ./.github/actions/init
 
-      - name: Run build
-        run: npm run build
+      - name: Build project
+        run: npm run build:test
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+
+      - name: Run checks
+        run: npm run check
