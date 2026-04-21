@@ -1,4 +1,4 @@
-import type { z } from "astro/zod";
+import type { z } from "zod/mini";
 
 /**
  * Parse and validate the JSON body of an API response using a Zod schema.
@@ -8,7 +8,7 @@ import type { z } from "astro/zod";
  * @returns The parsed and validated JSON data
  * @throws An error if parsing fails or if validation fails
  */
-export const parseAndValidateJsonBody = async <T extends z.ZodType>(
+export const parseAndValidateJsonBody = async <T extends z.ZodMiniType>(
   response: Response,
   schema: T,
   apiName: string,

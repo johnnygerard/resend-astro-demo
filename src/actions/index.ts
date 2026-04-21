@@ -1,6 +1,6 @@
 import { v4 as uuid } from "@lukeed/uuid";
-import { z } from "astro/zod";
 import { ActionError, defineAction } from "astro:actions";
+import { z } from "zod/mini";
 import { sendEmail } from "~/api/send-email";
 import { verifyTurnstileToken } from "~/api/verify-turnstile-token";
 import { emailSchema, messageSchema, nameSchema } from "~/validation/schemas";
@@ -9,11 +9,11 @@ export const server = {
   submitContactForm: defineAction({
     accept: "form",
     input: z.object({
-      website: z.string().optional(),
+      website: z.optional(z.string()), // Honeypot field
       name: nameSchema,
       email: emailSchema,
       message: messageSchema,
-      "cf-turnstile-response": z.string().min(1),
+      "cf-turnstile-response": z.string().check(z.minLength(1)),
     }),
     handler: async (input, context) => {
       try {

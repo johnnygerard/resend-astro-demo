@@ -242,8 +242,8 @@ const inputStyles = tw(
 </div>
 
 <script>
-  import type { z } from "astro/zod";
   import { actions, isInputError } from "astro:actions";
+  import type { z } from "zod/mini";
   import { assertInstanceOf } from "~/utils/assert-instance-of";
   import { assertNotNull } from "~/utils/assert-not-null";
   import { emailSchema, messageSchema, nameSchema } from "~/validation/schemas";
@@ -263,7 +263,7 @@ const inputStyles = tw(
   const addValidationHandlers = (
     field: HTMLInputElement | HTMLTextAreaElement,
     errorElement: HTMLElement,
-    schema: z.ZodString,
+    schema: z.ZodMiniString,
   ): void => {
     const setError = getErrorSetter(errorElement, field);
 

@@ -1,5 +1,5 @@
-import { z } from "astro/zod";
 import { ActionError } from "astro:actions";
+import { z } from "zod/mini";
 import { parseAndValidateJsonBody } from "~/utils/parse-and-validate-json-body";
 
 const successResponseSchema = z.object({ id: z.string() });
@@ -7,7 +7,7 @@ const successResponseSchema = z.object({ id: z.string() });
 // https://github.com/resend/resend-node/blob/canary/src/interfaces.ts#L34
 const errorResponseSchema = z.object({
   message: z.string(),
-  statusCode: z.number().nullable(),
+  statusCode: z.nullable(z.number()),
   name: z.enum([
     "invalid_idempotency_key",
     "validation_error",

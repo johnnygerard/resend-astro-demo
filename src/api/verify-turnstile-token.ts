@@ -1,32 +1,34 @@
-import { z } from "astro/zod";
 import { ActionError } from "astro:actions";
+import { z } from "zod/mini";
 import { parseAndValidateJsonBody } from "~/utils/parse-and-validate-json-body";
 
 // https://developers.cloudflare.com/turnstile/get-started/server-side-validation/#api-response-format
-const siteverifySchema = z
-  .object({
-    success: z.boolean(),
-    challenge_ts: z.string(),
-    hostname: z.string(),
-    "error-codes": z.array(
-      z.enum([
-        "missing-input-secret",
-        "invalid-input-secret",
-        "missing-input-response",
-        "invalid-input-response",
-        "bad-request",
-        "timeout-or-duplicate",
-        "internal-error",
-      ]),
-    ),
-    action: z.string(),
-    cdata: z.string(),
-    metadata: z.object({
-      ephemeral_id: z.string().optional(), // Enterprise-only field
+const siteverifySchema = z.required(
+  z.partial(
+    z.object({
+      success: z.boolean(),
+      challenge_ts: z.string(),
+      hostname: z.string(),
+      "error-codes": z.array(
+        z.enum([
+          "missing-input-secret",
+          "invalid-input-secret",
+          "missing-input-response",
+          "invalid-input-response",
+          "bad-request",
+          "timeout-or-duplicate",
+          "internal-error",
+        ]),
+      ),
+      action: z.string(),
+      cdata: z.string(),
+      metadata: z.object({
+        ephemeral_id: z.optional(z.string()), // Enterprise-only field
+      }),
     }),
-  })
-  .partial()
-  .required({ success: true });
+  ),
+  { success: true },
+);
 
 /**
  * Verify the Cloudflare Turnstile token using the Siteverify API.
