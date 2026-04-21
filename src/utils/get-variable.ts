@@ -1,7 +1,4 @@
-type Key =
-  | "CF_TURNSTILE_SECRET_KEY"
-  | "PUBLIC_CF_TURNSTILE_SITEKEY"
-  | "RESEND_API_KEY";
+import type { EnvironmentVariable } from "~/types/environment-variable";
 
 /**
  * Retrieve and validate an environment variable exposed by Vite from `import.meta.env`.
@@ -11,7 +8,7 @@ type Key =
  * @see https://vite.dev/guide/env-and-mode
  * @see https://docs.astro.build/en/guides/environment-variables/
  */
-export const getVariable = (key: Key): string => {
+export const getVariable = (key: EnvironmentVariable): string => {
   const value: unknown = import.meta.env[key];
   if (typeof value === "string") return value;
 
