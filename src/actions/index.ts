@@ -3,6 +3,7 @@ import { ActionError, defineAction } from "astro:actions";
 import { z } from "zod/mini";
 import { sendEmail } from "~/api/send-email";
 import { verifyTurnstileToken } from "~/api/verify-turnstile-token";
+import { ENV } from "~/env";
 import { emailSchema, messageSchema, nameSchema } from "~/validation/schemas";
 
 export const server = {
@@ -28,8 +29,8 @@ export const server = {
         );
 
         return await sendEmail({
-          from: `John <hello@resend.jgerard.dev>`,
-          to: "delivered@resend.dev", // @see https://resend.com/docs/dashboard/emails/send-test-emails
+          from: ENV.SENDER_EMAIL,
+          to: ENV.RECIPIENT_EMAIL.split(","),
           subject: `New message from ${input.name} (${input.email})`,
           text: input.message,
         });

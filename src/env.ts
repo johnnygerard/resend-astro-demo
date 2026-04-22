@@ -18,5 +18,10 @@ export const ENV = {
     "PUBLIC_CF_TURNSTILE_SITEKEY",
     import.meta.env.PUBLIC_CF_TURNSTILE_SITEKEY,
   ),
+  RECIPIENT_EMAIL: getVariable(
+    "RECIPIENT_EMAIL",
+    import.meta.env.RECIPIENT_EMAIL,
+  ),
   RESEND_API_KEY: getVariable("RESEND_API_KEY", import.meta.env.RESEND_API_KEY),
+  SENDER_EMAIL: getVariable("SENDER_EMAIL", import.meta.env.SENDER_EMAIL),
 };
