@@ -13,9 +13,7 @@ jobs:
         uses: ./.github/actions/init
 
       - name: Build project
-        run: npm run build:test
-        env:
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: npm run build
 
       - name: Run checks
         run: npm run check

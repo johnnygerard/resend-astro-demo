@@ -20,6 +20,9 @@ jobs:
       - name: Build project
         run: npm run build:test
         env:
+          CF_TURNSTILE_SECRET_KEY: ${{ vars.CF_TURNSTILE_SECRET_KEY }}
+          EMAIL_RECIPIENT: ${{ vars.EMAIL_RECIPIENT }}
+          EMAIL_SENDER: ${{ vars.EMAIL_SENDER }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
       - name: Run Playwright tests

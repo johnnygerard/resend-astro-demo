@@ -2,13 +2,22 @@ import cloudflare from "@astrojs/cloudflare";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig, fontProviders } from "astro/config";
+import { defineConfig, envField, fontProviders } from "astro/config";
 
 // https://docs.astro.build/en/reference/configuration-reference/
 export default defineConfig({
   adapter: cloudflare(),
   build: {
     format: "file",
+  },
+  // Note that this environment configuration is only used for client-side variables.
+  env: {
+    schema: {
+      CF_TURNSTILE_SITEKEY: envField.string({
+        access: "public",
+        context: "client",
+      }),
+    },
   },
   fonts: [
     // Geist: sans-serif typeface

@@ -1,9 +1,9 @@
 import { v4 as uuid } from "@lukeed/uuid";
 import { ActionError, defineAction } from "astro:actions";
+import { env } from "cloudflare:workers";
 import { z } from "zod/mini";
 import { sendEmail } from "~/api/send-email";
 import { verifyTurnstileToken } from "~/api/verify-turnstile-token";
-import { ENV } from "~/env";
 import { emailSchema, messageSchema, nameSchema } from "~/validation/schemas";
 
 export const server = {
@@ -29,8 +29,8 @@ export const server = {
         );
 
         return await sendEmail({
-          from: ENV.SENDER_EMAIL,
-          to: ENV.RECIPIENT_EMAIL.split(","),
+          from: env.EMAIL_SENDER,
+          to: env.EMAIL_RECIPIENT.split(","),
           subject: `New message from ${input.name} (${input.email})`,
           text: input.message,
         });
