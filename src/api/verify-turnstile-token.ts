@@ -1,6 +1,6 @@
 import { ActionError } from "astro:actions";
 import { z } from "zod/mini";
-import { getVariable } from "~/utils/get-variable";
+import { ENV } from "~/env";
 import { parseAndValidateJsonBody } from "~/utils/parse-and-validate-json-body";
 
 // https://developers.cloudflare.com/turnstile/get-started/server-side-validation/#api-response-format
@@ -50,7 +50,7 @@ export const verifyTurnstileToken = async (
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          secret: getVariable("CF_TURNSTILE_SECRET_KEY"),
+          secret: ENV.CF_TURNSTILE_SECRET_KEY,
           response: token,
           remoteip,
         }),
