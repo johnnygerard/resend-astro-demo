@@ -1,5 +1,5 @@
 import { ActionError } from "astro:actions";
-import { CF_TURNSTILE_SECRET_KEY } from "astro:env/server";
+import { env } from "cloudflare:workers";
 import { z } from "zod/mini";
 import { parseAndValidateJsonBody } from "~/utils/parse-and-validate-json-body";
 
@@ -50,7 +50,7 @@ export const verifyTurnstileToken = async (
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          secret: CF_TURNSTILE_SECRET_KEY,
+          secret: env.CF_TURNSTILE_SECRET_KEY,
           response: token,
           remoteip,
         }),

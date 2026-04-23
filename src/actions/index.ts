@@ -1,6 +1,6 @@
 import { v4 as uuid } from "@lukeed/uuid";
 import { ActionError, defineAction } from "astro:actions";
-import { EMAIL_RECIPIENT, EMAIL_SENDER } from "astro:env/server";
+import { env } from "cloudflare:workers";
 import { z } from "zod/mini";
 import { sendEmail } from "~/api/send-email";
 import { verifyTurnstileToken } from "~/api/verify-turnstile-token";
@@ -29,8 +29,8 @@ export const server = {
         );
 
         return await sendEmail({
-          from: EMAIL_SENDER,
-          to: EMAIL_RECIPIENT.split(","),
+          from: env.EMAIL_SENDER,
+          to: env.EMAIL_RECIPIENT.split(","),
           subject: `New message from ${input.name} (${input.email})`,
           text: input.message,
         });
