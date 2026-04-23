@@ -31,7 +31,7 @@ export const server = {
         return await sendEmail({
           from: runtimeEnv.EMAIL_SENDER,
           to: runtimeEnv.EMAIL_RECIPIENT.split(","),
-          subject: `New message from ${input.name} (${input.email})`,
+          subject: `New message from "${input.name}" <${input.email}>`,
           text: input.message,
         });
       } catch (e) {
