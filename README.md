@@ -1,7 +1,7 @@
 # Resend Demo with Astro
 
 ![project status](https://img.shields.io/badge/project_status-active-success?style=for-the-badge)
-[![live site](https://img.shields.io/badge/live_site-blue?style=for-the-badge)](https://resend.jgerard.dev)
+[![live site](https://img.shields.io/badge/live_site-blue?style=for-the-badge)](https://resend-astro-demo.jgerard.dev)
 
 ## Overview
 
