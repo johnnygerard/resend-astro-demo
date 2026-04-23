@@ -1,6 +1,6 @@
 import { ActionError } from "astro:actions";
-import { RESEND_API_KEY } from "astro:env/server";
 import { z } from "zod/mini";
+import { runtimeEnv } from "~/runtime-env";
 import { parseAndValidateJsonBody } from "~/utils/parse-and-validate-json-body";
 
 const successResponseSchema = z.object({ id: z.string() });
@@ -53,7 +53,7 @@ export const sendEmail = async (body: {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
+        Authorization: `Bearer ${runtimeEnv.RESEND_API_KEY}`,
       },
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(5000),

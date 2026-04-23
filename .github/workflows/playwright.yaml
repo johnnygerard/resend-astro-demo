@@ -17,7 +17,7 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Create environment file
+      - name: Create environment file for runtime variables
         run: |
           echo "CF_TURNSTILE_SECRET_KEY=${{ vars.CF_TURNSTILE_SECRET_KEY }}" >> .dev.vars
           echo "EMAIL_RECIPIENT=${{ vars.EMAIL_RECIPIENT }}" >> .dev.vars
