@@ -42,50 +42,6 @@ const inputStyles = tw(
     className,
   )}
 >
-  {/* Success Message */}
-  <div
-    aria-live="polite"
-    class={tw(
-      "absolute inset-0 grid place-content-center text-center",
-      "invisible opacity-0 duration-300",
-      "bg-neutral-900/90 backdrop-blur-xl",
-    )}
-    id="contact-success"
-  >
-    <CheckCircleIcon
-      aria-hidden
-      className="mx-auto size-12 text-green-400"
-      weight="fill"
-    />
-    <hgroup class="mt-4 max-w-100">
-      <h2 class="text-xl font-semibold text-neutral-100">Message Sent!</h2>
-      <p class="mt-1.5 text-sm text-neutral-400">
-        Thanks for trying out this demo!
-      </p>
-    </hgroup>
-    <div class="mt-6 flex flex-col gap-3">
-      <Link
-        buttonVariant="primary"
-        href="https://www.jgerard.dev/en-us/portfolio"
-        external
-      >
-        View portfolio
-      </Link>
-      <button
-        class={tw(
-          "rounded-lg border border-neutral-700 px-5 py-2.5",
-          "text-sm font-semibold text-neutral-300",
-          "transition hover:border-neutral-500 hover:text-neutral-100",
-          "outline-offset-1 active:scale-[0.98]",
-        )}
-        id="contact-reload"
-        type="button"
-      >
-        Send another message
-      </button>
-    </div>
-  </div>
-
   <noscript>
     <div class="absolute inset-0 grid place-content-center p-8">
       <p class={tw("text-center text-sm text-pretty text-neutral-400")}>
@@ -240,6 +196,50 @@ const inputStyles = tw(
       </div>
     </div>
   </form>
+
+  {/* Success Message */}
+  <div
+    aria-live="polite"
+    class={tw(
+      "absolute inset-0 grid place-content-center text-center",
+      "invisible opacity-0 duration-300",
+      "bg-neutral-900/90 backdrop-blur-xl",
+    )}
+    id="contact-success"
+  >
+    <CheckCircleIcon
+      aria-hidden
+      className="mx-auto size-12 text-green-400"
+      weight="fill"
+    />
+    <hgroup class="mt-4 max-w-100">
+      <h2 class="text-xl font-semibold text-neutral-100">Message Sent!</h2>
+      <p class="mt-1.5 text-sm text-neutral-400">
+        Thanks for trying out this demo!
+      </p>
+    </hgroup>
+    <div class="mt-6 flex flex-col gap-3">
+      <Link
+        buttonVariant="primary"
+        href="https://www.jgerard.dev/en-us/portfolio"
+        external
+      >
+        View portfolio
+      </Link>
+      <button
+        class={tw(
+          "rounded-lg border border-neutral-700 px-5 py-2.5",
+          "text-sm font-semibold text-neutral-300",
+          "transition hover:border-neutral-500 hover:text-neutral-100",
+          "outline-offset-1 active:scale-[0.98]",
+        )}
+        id="contact-reload"
+        type="button"
+      >
+        Send another message
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
