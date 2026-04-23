@@ -55,7 +55,7 @@
   "scripts": {
     "astro": "astro",
     "build": "astro build",
-    "build:test": "astro build --mode testing",
+    "build:test": "astro build --mode test",
     "cf-typegen": "wrangler types",
     "check": "tsc --noEmit && astro check",
     "check:deploy": "wrangler deploy --outdir dist --dry-run",

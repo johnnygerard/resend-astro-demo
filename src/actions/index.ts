@@ -1,5 +1,6 @@
 import { v4 as uuid } from "@lukeed/uuid";
 import { ActionError, defineAction } from "astro:actions";
+import { EMAIL_RECIPIENT, EMAIL_SENDER } from "astro:env/server";
 import { z } from "zod/mini";
 import { sendEmail } from "~/api/send-email";
 import { verifyTurnstileToken } from "~/api/verify-turnstile-token";
@@ -28,8 +29,8 @@ export const server = {
         );
 
         return await sendEmail({
-          from: `John <hello@resend.jgerard.dev>`,
-          to: "delivered@resend.dev", // @see https://resend.com/docs/dashboard/emails/send-test-emails
+          from: EMAIL_SENDER,
+          to: EMAIL_RECIPIENT.split(","),
           subject: `New message from ${input.name} (${input.email})`,
           text: input.message,
         });

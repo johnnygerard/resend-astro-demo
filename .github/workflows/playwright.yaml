@@ -17,10 +17,15 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Create environment file
+        run: |
+          echo "CF_TURNSTILE_SECRET_KEY=${{ vars.CF_TURNSTILE_SECRET_KEY }}" >> .dev.vars
+          echo "EMAIL_RECIPIENT=${{ vars.EMAIL_RECIPIENT }}" >> .dev.vars
+          echo "EMAIL_SENDER=${{ vars.EMAIL_SENDER }}" >> .dev.vars
+          echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" >> .dev.vars
+
       - name: Build project
         run: npm run build:test
-        env:
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
       - name: Run Playwright tests
         run: npm run pw:test
