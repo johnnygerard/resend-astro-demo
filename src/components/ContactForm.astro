@@ -37,7 +37,7 @@ const inputStyles = tw(
 
 <div
   class={tw(
-    "w-full overflow-hidden bg-neutral-900/70 p-4 sm:p-8",
+    "@container w-full bg-neutral-900/70 p-4 sm:p-8",
     "relative rounded-2xl border border-neutral-800 shadow-xl",
     className,
   )}
@@ -178,10 +178,15 @@ const inputStyles = tw(
         {
           /**
            * Cloudflare Turnstile Widget
+           *
+           * Note that the CSS round function is used to prevent clipping of the
+           * right edge of the widget, which can occur due to fractional pixel widths.
            * @see https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/
            */
         }
-        <div class="overflow-x-auto [scrollbar-width:thin]">
+        <div
+          class="w-[round(down,calc(100cqw),1px)] overflow-x-auto [scrollbar-width:thin]"
+        >
           <div
             class="cf-turnstile"
             data-appearance="always"
