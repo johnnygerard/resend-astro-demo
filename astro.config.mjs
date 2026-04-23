@@ -33,7 +33,7 @@ export default defineConfig({
   ],
   integrations: [react(), sitemap()],
   output: "server",
-  site: "https://resend.jgerard.dev",
+  site: "https://resend-astro-demo.jgerard.dev",
   trailingSlash: "never",
   vite: {
     plugins: [tailwindcss()],

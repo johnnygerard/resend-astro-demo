@@ -17,7 +17,7 @@
   "routes": [
     {
       "custom_domain": true,
-      "pattern": "resend.jgerard.dev"
+      "pattern": "resend-astro-demo.jgerard.dev"
     }
   ],
   "send_metrics": false,
