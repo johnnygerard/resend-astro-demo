@@ -1,5 +1,5 @@
 import { ActionError } from "astro:actions";
-import { env } from "cloudflare:workers";
+import { RESEND_API_KEY } from "astro:env/server";
 import { z } from "zod/mini";
 import { parseAndValidateJsonBody } from "~/utils/parse-and-validate-json-body";
 
@@ -53,7 +53,7 @@ export const sendEmail = async (body: {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(5000),
