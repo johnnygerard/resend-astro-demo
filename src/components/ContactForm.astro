@@ -37,13 +37,16 @@ const inputStyles = tw(
 
 <div
   class={tw(
-    "@container w-full bg-neutral-900/70 p-4 sm:p-8",
+    "[--container-padding:1rem] sm:[--container-padding:2rem]",
+    "@container w-full bg-neutral-900/70 p-(--container-padding)",
     "relative rounded-2xl border border-neutral-800 shadow-xl",
     className,
   )}
 >
   <noscript>
-    <div class="absolute inset-0 grid place-content-center p-8">
+    <div
+      class="absolute inset-0 grid place-content-center p-(--container-padding)"
+    >
       <p class={tw("text-center text-sm text-pretty text-neutral-400")}>
         This contact form requires JavaScript to operate. Please ensure that it
         is supported and enabled in your browser settings. To learn more, check
@@ -206,7 +209,7 @@ const inputStyles = tw(
   <div
     aria-live="polite"
     class={tw(
-      "absolute inset-0 grid place-content-center text-center",
+      "absolute inset-0 grid place-content-center p-(--container-padding) text-center",
       "invisible opacity-0 duration-300",
       "bg-neutral-900/90 backdrop-blur-xl",
     )}
