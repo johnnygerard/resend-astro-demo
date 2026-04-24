@@ -196,6 +196,7 @@ const inputStyles = tw(
             data-sitekey={CF_TURNSTILE_SITEKEY}
             data-size="flexible"
             data-theme="dark"
+            id="contact-turnstile"
             style="height: 65px;"
           >
           </div>
@@ -326,6 +327,7 @@ const inputStyles = tw(
       form.reset();
       form.inert = false;
       hide(successMessage);
+      window.turnstile?.reset("#contact-turnstile");
     });
 
     const nameInput = assertInstanceOf(
