@@ -33,6 +33,18 @@ export default defineConfig({
   ],
   integrations: [react(), sitemap()],
   output: "server",
+  session: {
+    /**
+     * Disable SESSION KV binding automatic provisioning
+     *
+     * This driver overrides the default driver from the Cloudflare adapter.
+     * @see https://unstorage.unjs.io/
+     * @see https://github.com/withastro/astro/pull/15803
+     */
+    driver: {
+      entrypoint: "unstorage/drivers/null",
+    },
+  },
   site: "https://resend-astro-demo.jgerard.dev",
   trailingSlash: "never",
   vite: {
