@@ -37,57 +37,16 @@ const inputStyles = tw(
 
 <div
   class={tw(
-    "w-full overflow-hidden bg-neutral-900/70 p-4 sm:p-8",
+    "[--container-padding:1rem] sm:[--container-padding:2rem]",
+    "@container w-full bg-neutral-900/70 p-(--container-padding)",
     "relative rounded-2xl border border-neutral-800 shadow-xl",
     className,
   )}
 >
-  {/* Success Message */}
-  <div
-    aria-live="polite"
-    class={tw(
-      "absolute inset-0 grid place-content-center text-center",
-      "invisible opacity-0 duration-300",
-      "bg-neutral-900/90 backdrop-blur-xl",
-    )}
-    id="contact-success"
-  >
-    <CheckCircleIcon
-      aria-hidden
-      className="mx-auto size-12 text-green-400"
-      weight="fill"
-    />
-    <hgroup class="mt-4 max-w-100">
-      <h2 class="text-xl font-semibold text-neutral-100">Message Sent!</h2>
-      <p class="mt-1.5 text-sm text-neutral-400">
-        Thanks for trying out this demo!
-      </p>
-    </hgroup>
-    <div class="mt-6 flex flex-col gap-3">
-      <Link
-        buttonVariant="primary"
-        href="https://www.jgerard.dev/en-us/portfolio"
-        external
-      >
-        View portfolio
-      </Link>
-      <button
-        class={tw(
-          "rounded-lg border border-neutral-700 px-5 py-2.5",
-          "text-sm font-semibold text-neutral-300",
-          "transition hover:border-neutral-500 hover:text-neutral-100",
-          "outline-offset-1 active:scale-[0.98]",
-        )}
-        id="contact-reload"
-        type="button"
-      >
-        Send another message
-      </button>
-    </div>
-  </div>
-
   <noscript>
-    <div class="absolute inset-0 grid place-content-center p-8">
+    <div
+      class="absolute inset-0 grid place-content-center p-(--container-padding)"
+    >
       <p class={tw("text-center text-sm text-pretty text-neutral-400")}>
         This contact form requires JavaScript to operate. Please ensure that it
         is supported and enabled in your browser settings. To learn more, check
@@ -103,11 +62,11 @@ const inputStyles = tw(
 
     {/* Honeypot field - hidden from real users, filled by bots */}
     <div aria-hidden="true" class="sr-only">
-      <label for="contact-website">Website</label>
+      <label for="contact-sushi">Sushi</label>
       <input
         autocomplete="off"
-        id="contact-website"
-        name="website"
+        id="contact-sushi"
+        name="sushi"
         tabindex={-1}
         type="text"
       />
@@ -222,17 +181,22 @@ const inputStyles = tw(
         {
           /**
            * Cloudflare Turnstile Widget
+           *
+           * Note that the CSS round function is used to prevent clipping of the
+           * right edge of the widget, which can occur due to fractional pixel widths.
            * @see https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/
            */
         }
-        <div class="overflow-x-auto [scrollbar-width:thin]">
+        <div
+          class="w-[round(down,calc(100cqw),1px)] overflow-x-auto [scrollbar-width:thin]"
+        >
           <div
             class="cf-turnstile"
             data-appearance="always"
-            data-language="en-us"
             data-sitekey={CF_TURNSTILE_SITEKEY}
             data-size="flexible"
             data-theme="dark"
+            id="contact-turnstile"
             style="height: 65px;"
           >
           </div>
@@ -240,6 +204,48 @@ const inputStyles = tw(
       </div>
     </div>
   </form>
+
+  {/* Success Message */}
+  <div
+    aria-live="polite"
+    class={tw(
+      "absolute inset-0 flex flex-col justify-center p-(--container-padding)",
+      "invisible opacity-0 duration-300",
+      "bg-neutral-900/90 backdrop-blur-xl",
+    )}
+    id="contact-success"
+  >
+    <CheckCircleIcon
+      aria-hidden
+      className="mx-auto size-12 text-green-400"
+      weight="fill"
+    />
+    <hgroup class="mx-auto mt-4 max-w-100 text-center">
+      <h2 class="text-xl font-semibold text-neutral-100">Message sent!</h2>
+      <p class="mt-1.5 text-sm text-neutral-400">
+        Thanks for trying out this demo!
+      </p>
+    </hgroup>
+    <div class="mt-6 flex flex-col items-center">
+      <div>
+        <Link
+          buttonVariant="primary"
+          href="https://www.jgerard.dev/en-us/portfolio"
+          external
+        >
+          View portfolio
+        </Link>
+        <Button
+          class="mt-3"
+          id="contact-reload"
+          type="button"
+          variant="secondary"
+        >
+          Send another message
+        </Button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -321,6 +327,7 @@ const inputStyles = tw(
       form.reset();
       form.inert = false;
       hide(successMessage);
+      window.turnstile?.reset("#contact-turnstile");
     });
 
     const nameInput = assertInstanceOf(

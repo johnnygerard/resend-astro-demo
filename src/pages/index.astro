@@ -10,9 +10,9 @@ import { tw } from "~/utils/tw";
 
 export const prerender = true;
 
-const title = "Astro & Resend Integration";
+const title = "Resend & Astro Integration";
 const description =
-  "A production-ready contact form built for serverless email delivery using Astro, Resend, and Cloudflare Workers.";
+  "A production-ready contact form built for serverless email delivery using Resend, Astro, and Cloudflare Workers.";
 
 const features = [
   {
@@ -84,8 +84,8 @@ const features = [
         >
           {
             [
-              { href: "https://astro.build/", label: "Astro" },
               { href: "https://resend.com/", label: "Resend" },
+              { href: "https://astro.build/", label: "Astro" },
               {
                 href: "https://workers.cloudflare.com/",
                 label: "Cloudflare Workers",
@@ -93,7 +93,8 @@ const features = [
               { href: "https://tailwindcss.com/", label: "Tailwind CSS" },
               { href: "https://phosphoricons.com/", label: "Phosphor Icons" },
             ].map(({ href, label }) => (
-              <li>
+              // `flex` layout required for Firefox
+              <li class="flex">
                 <Link external href={href} variant="ghost">
                   {label}
                 </Link>

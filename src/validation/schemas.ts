@@ -16,6 +16,7 @@ const getMinLengthSchema = (min: number, fieldName: string) =>
 
 export const nameSchema = getRequiredSchema("Please enter your name.").check(
   getMaxLengthSchema(NAME_MAX_LENGTH, "Name"),
+  z.regex(/^[\p{L}\p{M}\p{Zs}\-'.]+$/u, "Name contains invalid characters."),
 );
 
 export const emailSchema = getRequiredSchema(
