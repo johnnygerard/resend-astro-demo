@@ -93,7 +93,8 @@ const features = [
               { href: "https://tailwindcss.com/", label: "Tailwind CSS" },
               { href: "https://phosphoricons.com/", label: "Phosphor Icons" },
             ].map(({ href, label }) => (
-              <li>
+              // `flex` layout required for Firefox
+              <li class="flex">
                 <Link external href={href} variant="ghost">
                   {label}
                 </Link>
