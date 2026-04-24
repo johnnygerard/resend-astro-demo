@@ -10,7 +10,7 @@ export const server = {
   submitContactForm: defineAction({
     accept: "form",
     input: z.object({
-      website: z.optional(z.string()), // Honeypot field
+      sushi: z.optional(z.string()), // Honeypot field
       name: nameSchema,
       email: emailSchema,
       message: messageSchema,
@@ -18,7 +18,7 @@ export const server = {
     }),
     handler: async (input, context) => {
       try {
-        if (input.website) {
+        if (input.sushi) {
           console.info("Received non-empty honeypot field.");
           return { id: uuid() };
         }
