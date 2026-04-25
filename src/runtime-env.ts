@@ -1,14 +1,6 @@
 import { env } from "cloudflare:workers";
 
-const get = (
-  name:
-    | "RESEND_API_KEY"
-    | "CF_TURNSTILE_SECRET_KEY"
-    | "EMAIL_RECIPIENT"
-    | "EMAIL_SENDER"
-    | "UPSTASH_REDIS_REST_URL"
-    | "UPSTASH_REDIS_REST_TOKEN",
-): string => {
+const get = (name: keyof typeof runtimeEnv): string => {
   const value = env[name];
   if (typeof value === "string") return value;
 
