@@ -1,6 +1,8 @@
 import { v4 as uuid } from "@lukeed/uuid";
 import { ActionError, defineAction } from "astro:actions";
+import { waitUntil } from "cloudflare:workers";
 import { z } from "zod/mini";
+import { rateLimiters } from "~/api/rate-limiters";
 import { sendEmail } from "~/api/send-email";
 import { verifyTurnstileToken } from "~/api/verify-turnstile-token";
 import { runtimeEnv } from "~/runtime-env";
@@ -23,6 +25,22 @@ export const server = {
           // Pretend the submission was successful to avoid tipping off bots.
           return { id: uuid() };
         }
+
+        const [userRateLimitResult, globalRateLimitResult] = await Promise.all([
+          rateLimiters.user.limit(context.clientAddress),
+          rateLimiters.global.limit("global"),
+        ]);
+
+        // Keep Cloudflare worker alive for sending analytics.
+        // @see https://upstash.com/docs/redis/sdks/ratelimit-ts/features#asynchronous-synchronization-between-databases
+        waitUntil(userRateLimitResult.pending);
+        waitUntil(globalRateLimitResult.pending);
+
+        if (!userRateLimitResult.success || !globalRateLimitResult.success)
+          throw new ActionError({
+            code: "TOO_MANY_REQUESTS",
+            message: "Too many requests. Please try again shortly.",
+          });
 
         await verifyTurnstileToken(
           input["cf-turnstile-response"],
