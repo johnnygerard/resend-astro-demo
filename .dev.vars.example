@@ -9,3 +9,7 @@ CF_TURNSTILE_SECRET_KEY="1x0000000000000000000000000000000AA" #	Always passes va
 # https://resend.com/docs/dashboard/emails/send-test-emails
 EMAIL_RECIPIENT="delivered@resend.dev"
 EMAIL_SENDER="John Smith <john@smith.example>"
+
+# https://upstash.com/docs/redis/howto/connectwithupstashredis
+UPSTASH_REDIS_REST_URL="secret"
+UPSTASH_REDIS_REST_TOKEN="secret"
