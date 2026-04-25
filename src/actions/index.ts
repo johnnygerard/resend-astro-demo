@@ -20,6 +20,7 @@ export const server = {
       try {
         if (input.sushi) {
           console.info("Received non-empty honeypot field.");
+          // Pretend the submission was successful to avoid tipping off bots.
           return { id: uuid() };
         }
 
