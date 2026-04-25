@@ -31,7 +31,6 @@ export const rateLimiters = {
   // The global limiter defends against volumetric attacks and controls overall budget.
   global: new Ratelimit({
     ...sharedConfig,
-    // limiter: Ratelimit.tokenBucket(1_500, "1d", 5_000),
     limiter: Ratelimit.tokenBucket(
       1_500, // Refill rate
       "1d", // Refill interval (one day)
