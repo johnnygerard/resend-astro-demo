@@ -34,8 +34,7 @@ const features = [
   {
     icon: ShieldCheckIcon,
     title: "Security",
-    description:
-      "Protected by Cloudflare Turnstile to help reduce spam and abuse.",
+    description: "Protected by Cloudflare Turnstile and Upstash Rate Limit.",
   },
 ];
 ---
@@ -92,6 +91,14 @@ const features = [
               },
               { href: "https://tailwindcss.com/", label: "Tailwind CSS" },
               { href: "https://phosphoricons.com/", label: "Phosphor Icons" },
+              {
+                href: "https://www.cloudflare.com/application-services/products/turnstile/",
+                label: "Cloudflare Turnstile",
+              },
+              {
+                href: "https://upstash.com/docs/redis/sdks/ratelimit-ts/overview",
+                label: "Upstash Rate Limit",
+              },
             ].map(({ href, label }) => (
               // `flex` layout required for Firefox
               <li class="flex">
