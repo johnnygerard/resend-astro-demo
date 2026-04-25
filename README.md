@@ -24,6 +24,8 @@ Note that while SSR is required for the Astro server action to work, the homepag
 
 ### Security
 
+- **Input validation**: [Zod](https://zod.dev/)
+- **Rate limiting**: [Upstash](https://upstash.com/docs/redis/sdks/ratelimit-ts/overview)
 - **Bot detection**: [Cloudflare Turnstile](https://www.cloudflare.com/application-services/products/turnstile/)
 
 ### Quality Assurance

@@ -23,6 +23,8 @@ jobs:
           echo "EMAIL_RECIPIENT=${{ vars.EMAIL_RECIPIENT }}" >> .dev.vars
           echo "EMAIL_SENDER=${{ vars.EMAIL_SENDER }}" >> .dev.vars
           echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" >> .dev.vars
+          echo "UPSTASH_REDIS_REST_URL=${{ secrets.UPSTASH_REDIS_REST_URL }}" >> .dev.vars
+          echo "UPSTASH_REDIS_REST_TOKEN=${{ secrets.UPSTASH_REDIS_REST_TOKEN }}" >> .dev.vars
 
       - name: Build project
         run: npm run build:test
