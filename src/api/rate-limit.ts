@@ -25,11 +25,8 @@ const getUserRateLimiter = lazy(
   () =>
     new Ratelimit({
       ...sharedConfig,
-      limiter: Ratelimit.tokenBucket(
-        5, // Refill rate
-        "1d", // Refill interval (one day)
-        50, // Capacity
-      ),
+      // Bucket capacity of 50 tokens with a refill rate of 5 tokens per day.
+      limiter: Ratelimit.tokenBucket(5, "1d", 50),
       prefix: "resend-astro-demo:user",
       redis: getRedisClient(),
     }),
@@ -41,11 +38,8 @@ const getGlobalRateLimiter = lazy(
   () =>
     new Ratelimit({
       ...sharedConfig,
-      limiter: Ratelimit.tokenBucket(
-        1_500, // Refill rate
-        "1d", // Refill interval (one day)
-        5_000, // Capacity
-      ),
+      // Bucket capacity of 5k tokens with a refill rate of 1.5k tokens per day.
+      limiter: Ratelimit.tokenBucket(1_500, "1d", 5_000),
       prefix: "resend-astro-demo:global",
       redis: getRedisClient(),
     }),
