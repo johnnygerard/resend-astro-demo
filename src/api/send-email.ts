@@ -35,17 +35,17 @@ const errorResponseSchema = z.object({
 });
 
 /**
- * Send an email using the Resend API.
- * @param body The email payload containing sender, recipient, subject, and text content.
- * @returns The ID of the created email on success.
+ * Send an email using the Resend API endpoint `POST /emails`.
+ * @param body - The API endpoint body parameters.
+ * @returns The ID of the created email (used by other API endpoints).
  * @see https://resend.com/docs/api-reference/emails/send-email
  */
 export const sendEmail = async (body: {
   from: string;
   to: string | string[];
-  reply_to?: string | string[];
   subject: string;
-  text: string;
+  reply_to?: string | string[];
+  text?: string;
 }): Promise<z.infer<typeof successResponseSchema>> => {
   let response: Response;
 
