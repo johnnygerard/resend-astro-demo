@@ -25,7 +25,7 @@ export const server = {
           return { id: uuid() };
         }
 
-        // This rate limiter also protect the Siteverify API (Turnstile) from
+        // This rate limiter also protects the Siteverify API (Turnstile) from
         // validation flooding.
         await rateLimitUser(context.clientAddress);
 
