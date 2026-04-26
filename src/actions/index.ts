@@ -1,4 +1,3 @@
-import { v4 as uuid } from "@lukeed/uuid";
 import { ActionError, defineAction } from "astro:actions";
 import { z } from "zod/mini";
 import { rateLimitGlobally, rateLimitUser } from "~/api/rate-limit";
@@ -17,12 +16,11 @@ export const server = {
       message: messageSchema,
       "cf-turnstile-response": z.string().check(z.minLength(1)),
     }),
-    handler: async (input, context) => {
+    handler: async (input, context): Promise<void> => {
       try {
         if (input.sushi) {
           console.info("Received non-empty honeypot field.");
-          // Pretend the submission was successful to avoid tipping off bots.
-          return { id: uuid() };
+          return;
         }
 
         // This rate limiter also protects the Siteverify API (Turnstile) from
@@ -36,7 +34,7 @@ export const server = {
 
         await rateLimitGlobally();
 
-        return await sendEmail({
+        await sendEmail({
           from: runtimeEnv.EMAIL_SENDER,
           to: runtimeEnv.EMAIL_RECIPIENT.split(",").map((email) =>
             email.trim(),

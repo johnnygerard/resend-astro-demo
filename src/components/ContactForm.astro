@@ -372,13 +372,13 @@ const inputStyles = tw(
         setSubmitState("pending");
         hide(serverError);
         const formData = new FormData(form);
-        const [{ data, error }] = await Promise.all([
+        const [{ error }] = await Promise.all([
           actions.submitContactForm(formData),
           // Avoid flash of pending state on the submit button.
           new Promise((resolve) => setTimeout(resolve, 300)),
         ]);
 
-        if (data) {
+        if (!error) {
           show(successMessage);
           form.inert = true;
           return;

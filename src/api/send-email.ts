@@ -3,8 +3,6 @@ import { z } from "zod/mini";
 import { runtimeEnv } from "~/runtime-env";
 import { parseAndValidateJsonBody } from "~/utils/parse-and-validate-json-body";
 
-const successResponseSchema = z.object({ id: z.string() });
-
 // https://github.com/resend/resend-node/blob/canary/src/interfaces.ts#L34
 const errorResponseSchema = z.object({
   message: z.string(),
@@ -37,7 +35,6 @@ const errorResponseSchema = z.object({
 /**
  * Send an email using the Resend API endpoint `POST /emails`.
  * @param body - The API endpoint body parameters.
- * @returns The ID of the created email (used by other API endpoints).
  * @see https://resend.com/docs/api-reference/emails/send-email
  */
 export const sendEmail = async (body: {
@@ -46,7 +43,7 @@ export const sendEmail = async (body: {
   subject: string;
   reply_to?: string | string[];
   text?: string;
-}): Promise<z.infer<typeof successResponseSchema>> => {
+}): Promise<void> => {
   let response: Response;
 
   try {
@@ -63,12 +60,7 @@ export const sendEmail = async (body: {
     throw new Error("Fetch request to Resend API failed.", { cause: e });
   }
 
-  if (response.ok)
-    return await parseAndValidateJsonBody(
-      response,
-      successResponseSchema,
-      "Resend API",
-    );
+  if (response.ok) return;
 
   const error = await parseAndValidateJsonBody(
     response,
