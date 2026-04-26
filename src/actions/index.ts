@@ -1,8 +1,7 @@
 import { v4 as uuid } from "@lukeed/uuid";
 import { ActionError, defineAction } from "astro:actions";
-import { waitUntil } from "cloudflare:workers";
 import { z } from "zod/mini";
-import { rateLimiters } from "~/api/rate-limiters";
+import { rateLimitGlobally, rateLimitUser } from "~/api/rate-limit";
 import { sendEmail } from "~/api/send-email";
 import { verifyTurnstileToken } from "~/api/verify-turnstile-token";
 import { runtimeEnv } from "~/runtime-env";
@@ -26,26 +25,16 @@ export const server = {
           return { id: uuid() };
         }
 
-        const [userRateLimitResult, globalRateLimitResult] = await Promise.all([
-          rateLimiters.user.limit(context.clientAddress),
-          rateLimiters.global.limit("global"),
-        ]);
-
-        // Keep Cloudflare worker alive for sending analytics.
-        // @see https://upstash.com/docs/redis/sdks/ratelimit-ts/features#asynchronous-synchronization-between-databases
-        waitUntil(userRateLimitResult.pending);
-        waitUntil(globalRateLimitResult.pending);
-
-        if (!userRateLimitResult.success || !globalRateLimitResult.success)
-          throw new ActionError({
-            code: "TOO_MANY_REQUESTS",
-            message: "Too many requests. Please try again shortly.",
-          });
+        // This rate limiter also protect the Siteverify API (Turnstile) from
+        // validation flooding.
+        await rateLimitUser(context.clientAddress);
 
         await verifyTurnstileToken(
           input["cf-turnstile-response"],
           context.clientAddress,
         );
+
+        await rateLimitGlobally();
 
         return await sendEmail({
           from: runtimeEnv.EMAIL_SENDER,

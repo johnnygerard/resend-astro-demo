@@ -1,5 +1,7 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis/cloudflare";
+import { ActionError } from "astro:actions";
+import { waitUntil } from "cloudflare:workers";
 import { runtimeEnv } from "~/runtime-env";
 import { lazy } from "~/utils/lazy";
 
@@ -19,7 +21,7 @@ const getRedisClient = lazy(
     }),
 );
 
-const userRateLimiter = lazy(
+const getUserRateLimiter = lazy(
   () =>
     new Ratelimit({
       ...sharedConfig,
@@ -33,7 +35,9 @@ const userRateLimiter = lazy(
     }),
 );
 
-const globalRateLimiter = lazy(
+// This configuration assumes a hypothetical Resend subscriber on the Pro plan
+// (50,000 transactional emails included per month).
+const getGlobalRateLimiter = lazy(
   () =>
     new Ratelimit({
       ...sharedConfig,
@@ -47,19 +51,30 @@ const globalRateLimiter = lazy(
     }),
 );
 
+const rateLimit = async (limiter: Ratelimit, id: string): Promise<void> => {
+  const { pending, success } = await limiter.limit(id);
+
+  // Keep Cloudflare worker alive for sending analytics.
+  // @see https://upstash.com/docs/redis/sdks/ratelimit-ts/features#asynchronous-synchronization-between-databases
+  waitUntil(pending);
+  if (success) return;
+
+  throw new ActionError({
+    code: "TOO_MANY_REQUESTS",
+    message: "Too many requests. Please try again shortly.",
+  });
+};
+
 /**
- * Rate limiters for the contact form POST endpoint.
- *
- * The following configuration assumes a hypothetical Resend subscriber on the
- * Pro plan (50,000 transactional emails included per month).
+ * Rate limit individual users.
  */
-export const rateLimiters = {
-  // Rate limiter for individual users.
-  get user() {
-    return userRateLimiter();
-  },
-  // The global limiter defends against volumetric attacks and controls overall budget.
-  get global() {
-    return globalRateLimiter();
-  },
+export const rateLimitUser = async (id: string): Promise<void> => {
+  await rateLimit(getUserRateLimiter(), id);
+};
+
+/**
+ * Rate limit globally to defend against volumetric attacks and control overall budget.
+ */
+export const rateLimitGlobally = async (): Promise<void> => {
+  await rateLimit(getGlobalRateLimiter(), "global");
 };
