@@ -41,6 +41,7 @@ export const server = {
           to: runtimeEnv.EMAIL_RECIPIENT.split(",").map((email) =>
             email.trim(),
           ),
+          reply_to: input.email,
           subject: `New message from "${input.name}" <${input.email}>`,
           text: input.message,
         });

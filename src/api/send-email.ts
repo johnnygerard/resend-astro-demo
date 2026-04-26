@@ -43,6 +43,7 @@ const errorResponseSchema = z.object({
 export const sendEmail = async (body: {
   from: string;
   to: string | string[];
+  reply_to?: string | string[];
   subject: string;
   text: string;
 }): Promise<z.infer<typeof successResponseSchema>> => {
