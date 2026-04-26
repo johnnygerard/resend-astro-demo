@@ -51,7 +51,10 @@ export default defineConfig({
     plugins: [tailwindcss()],
     ssr: {
       optimizeDeps: {
-        exclude: ["astro/actions/runtime/entrypoints/server.js"],
+        exclude: [
+          "astro/actions/runtime/entrypoints/server.js",
+          "@phosphor-icons/react",
+        ],
       },
     },
   },
