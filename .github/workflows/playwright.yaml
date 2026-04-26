@@ -2,6 +2,8 @@ name: Playwright
 on:
   pull_request:
     branches: [main]
+permissions:
+  contents: read
 jobs:
   playwright:
     timeout-minutes: 60
