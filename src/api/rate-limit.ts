@@ -12,6 +12,8 @@ const sharedConfig = {
   ephemeralCache: new Map<string, number>(),
 };
 
+const basePrefix = `resend-astro-demo:${import.meta.env.MODE}`;
+
 const getRedisClient = lazy(
   () =>
     new Redis({
@@ -27,7 +29,7 @@ const getUserRateLimiter = lazy(
       ...sharedConfig,
       // Bucket capacity of 50 tokens with a refill rate of 5 tokens per day.
       limiter: Ratelimit.tokenBucket(5, "1d", 50),
-      prefix: "resend-astro-demo:user",
+      prefix: `${basePrefix}:user`,
       redis: getRedisClient(),
     }),
 );
@@ -40,7 +42,7 @@ const getGlobalRateLimiter = lazy(
       ...sharedConfig,
       // Bucket capacity of 5k tokens with a refill rate of 1.5k tokens per day.
       limiter: Ratelimit.tokenBucket(1_500, "1d", 5_000),
-      prefix: "resend-astro-demo:global",
+      prefix: basePrefix,
       redis: getRedisClient(),
     }),
 );
