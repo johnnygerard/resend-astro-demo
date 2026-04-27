@@ -330,6 +330,7 @@ const inputStyles = tw(
       form.reset();
       form.inert = false;
       hide(successMessage);
+      window.turnstile?.reset("#contact-turnstile");
     });
 
     const nameInput = assertInstanceOf(
@@ -380,6 +381,8 @@ const inputStyles = tw(
         return;
       }
 
+      let isSubmissionSuccessful = false;
+
       try {
         setSubmitState("pending");
         hide(serverError);
@@ -391,6 +394,7 @@ const inputStyles = tw(
         ]);
 
         if (!error) {
+          isSubmissionSuccessful = true;
           serverErrorMessage.textContent = "";
           show(successMessage);
           form.inert = true;
@@ -428,7 +432,8 @@ const inputStyles = tw(
         );
       } finally {
         setSubmitState("idle");
-        window.turnstile?.reset("#contact-turnstile");
+        if (!isSubmissionSuccessful)
+          window.turnstile?.reset("#contact-turnstile");
       }
     });
   } catch (error) {
