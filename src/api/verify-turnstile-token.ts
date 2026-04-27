@@ -1,6 +1,6 @@
 import { ActionError } from "astro:actions";
 import { z } from "zod/mini";
-import { runtimeEnv } from "~/runtime-env";
+import { getRuntimeEnv } from "~/get-runtime-env";
 import { parseAndValidateJsonBody } from "~/utils/parse-and-validate-json-body";
 
 // https://developers.cloudflare.com/turnstile/get-started/server-side-validation/#api-response-format
@@ -50,7 +50,7 @@ export const verifyTurnstileToken = async (
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          secret: runtimeEnv.CF_TURNSTILE_SECRET_KEY,
+          secret: getRuntimeEnv().CF_TURNSTILE_SECRET_KEY,
           response: token,
           remoteip,
         }),
@@ -61,10 +61,12 @@ export const verifyTurnstileToken = async (
     throw new Error("Fetch request to Siteverify API failed.", { cause: e });
   }
 
-  if (!response.ok)
+  if (!response.ok) {
+    await response.body?.cancel();
     throw new Error(
       `Siteverify API request failed with status: ${response.status} ${response.statusText}`,
     );
+  }
 
   const siteverifyResult = await parseAndValidateJsonBody(
     response,
