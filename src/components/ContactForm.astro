@@ -145,9 +145,7 @@ const inputStyles = tw(
           className="size-5 shrink-0"
           weight="fill"
         />
-        <p id="contact-server-error-message">
-          Something went wrong. Please try again later.
-        </p>
+        <p class="min-h-lh" id="contact-server-error-message"></p>
       </div>
 
       <div class="space-y-5">
@@ -379,6 +377,7 @@ const inputStyles = tw(
         ]);
 
         if (!error) {
+          serverErrorMessage.textContent = "";
           show(successMessage);
           form.inert = true;
           return;
