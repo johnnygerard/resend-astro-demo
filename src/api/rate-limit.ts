@@ -3,6 +3,7 @@ import { Redis } from "@upstash/redis/cloudflare";
 import { ActionError } from "astro:actions";
 import { waitUntil } from "cloudflare:workers";
 import { runtimeEnv } from "~/runtime-env";
+import { formatRelativeTime } from "~/utils/format-relative-time";
 import { lazy } from "~/utils/lazy";
 
 // The ephemeral (in-memory) cache must remain outside serverless function handlers.
@@ -48,16 +49,17 @@ const getGlobalRateLimiter = lazy(
 );
 
 const rateLimit = async (limiter: Ratelimit, id: string): Promise<void> => {
-  const { pending, success } = await limiter.limit(id);
+  const { pending, success, reset } = await limiter.limit(id);
 
   // Keep Cloudflare worker alive for sending analytics.
   // @see https://upstash.com/docs/redis/sdks/ratelimit-ts/features#asynchronous-synchronization-between-databases
   waitUntil(pending);
   if (success) return;
+  const delta = Math.max(0, reset - Date.now());
 
   throw new ActionError({
     code: "TOO_MANY_REQUESTS",
-    message: "Too many requests. Please try again shortly.",
+    message: `Too many requests. Please try again ${formatRelativeTime(delta)}.`,
   });
 };
 
