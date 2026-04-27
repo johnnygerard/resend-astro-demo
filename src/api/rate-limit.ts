@@ -27,8 +27,8 @@ const getUserRateLimiter = lazy(
   () =>
     new Ratelimit({
       ...sharedConfig,
-      // Bucket capacity of 50 tokens with a refill rate of 5 tokens per day.
-      limiter: Ratelimit.tokenBucket(5, "1d", 50),
+      // Bucket capacity of 20 tokens with a refill rate of 1 token every 4 hours.
+      limiter: Ratelimit.tokenBucket(1, "4h", 20),
       prefix: `${basePrefix}:user`,
       redis: getRedisClient(),
     }),
