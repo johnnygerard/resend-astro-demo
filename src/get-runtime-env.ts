@@ -8,12 +8,12 @@ const schema = (name: string) =>
 export const getRuntimeEnv = lazy(() =>
   z
     .looseObject({
-      RESEND_API_KEY: schema("RESEND_API_KEY"),
-      CF_TURNSTILE_SECRET_KEY: schema("CF_TURNSTILE_SECRET_KEY"),
       EMAIL_RECIPIENT: schema("EMAIL_RECIPIENT"),
       EMAIL_SENDER: schema("EMAIL_SENDER"),
-      UPSTASH_REDIS_REST_URL: schema("UPSTASH_REDIS_REST_URL"),
+      RESEND_API_KEY: schema("RESEND_API_KEY"),
+      TURNSTILE_SECRET_KEY: schema("TURNSTILE_SECRET_KEY"),
       UPSTASH_REDIS_REST_TOKEN: schema("UPSTASH_REDIS_REST_TOKEN"),
+      UPSTASH_REDIS_REST_URL: schema("UPSTASH_REDIS_REST_URL"),
     })
     .parse(env),
 );

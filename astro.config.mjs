@@ -10,10 +10,10 @@ export default defineConfig({
   build: {
     format: "file",
   },
-  // Note that this environment configuration is only used for client-side variables.
+  // This environment configuration is only used for build time variables.
   env: {
     schema: {
-      CF_TURNSTILE_SITEKEY: envField.string({
+      TURNSTILE_SITEKEY: envField.string({
         access: "public",
         context: "client",
       }),

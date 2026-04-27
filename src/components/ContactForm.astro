@@ -3,7 +3,7 @@ import { CheckCircleIcon } from "@phosphor-icons/react/dist/ssr/CheckCircle";
 import { CircleNotchIcon } from "@phosphor-icons/react/dist/ssr/CircleNotch";
 import { PaperPlaneTiltIcon } from "@phosphor-icons/react/dist/ssr/PaperPlaneTilt";
 import { WarningCircleIcon } from "@phosphor-icons/react/dist/ssr/WarningCircle";
-import { CF_TURNSTILE_SITEKEY } from "astro:env/client";
+import { TURNSTILE_SITEKEY } from "astro:env/client";
 import Button from "~/components/Button.astro";
 import Link from "~/components/Link.astro";
 import { tw } from "~/utils/tw";
@@ -191,7 +191,7 @@ const inputStyles = tw(
           <div
             class="cf-turnstile"
             data-appearance="always"
-            data-sitekey={CF_TURNSTILE_SITEKEY}
+            data-sitekey={TURNSTILE_SITEKEY}
             data-size="flexible"
             data-theme="dark"
             id="contact-turnstile"
