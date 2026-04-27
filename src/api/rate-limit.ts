@@ -2,7 +2,7 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis/cloudflare";
 import { ActionError } from "astro:actions";
 import { waitUntil } from "cloudflare:workers";
-import { runtimeEnv } from "~/runtime-env";
+import { getRuntimeEnv } from "~/get-runtime-env";
 import { formatRelativeTime } from "~/utils/format-relative-time";
 import { lazy } from "~/utils/lazy";
 
@@ -18,8 +18,8 @@ const basePrefix = `resend-astro-demo:${import.meta.env.MODE}`;
 const getRedisClient = lazy(
   () =>
     new Redis({
-      url: runtimeEnv.UPSTASH_REDIS_REST_URL,
-      token: runtimeEnv.UPSTASH_REDIS_REST_TOKEN,
+      url: getRuntimeEnv().UPSTASH_REDIS_REST_URL,
+      token: getRuntimeEnv().UPSTASH_REDIS_REST_TOKEN,
       enableTelemetry: false,
     }),
 );

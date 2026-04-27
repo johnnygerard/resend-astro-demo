@@ -3,7 +3,7 @@ import { z } from "zod/mini";
 import { rateLimitGlobally, rateLimitUser } from "~/api/rate-limit";
 import { sendEmail } from "~/api/send-email";
 import { verifyTurnstileToken } from "~/api/verify-turnstile-token";
-import { runtimeEnv } from "~/runtime-env";
+import { getRuntimeEnv } from "~/get-runtime-env";
 import {
   emailSchema,
   messageSchema,
@@ -40,10 +40,10 @@ export const server = {
         await rateLimitGlobally();
 
         await sendEmail({
-          from: runtimeEnv.EMAIL_SENDER,
-          to: runtimeEnv.EMAIL_RECIPIENT.split(",").map((email) =>
-            email.trim(),
-          ),
+          from: getRuntimeEnv().EMAIL_SENDER,
+          to: getRuntimeEnv()
+            .EMAIL_RECIPIENT.split(",")
+            .map((email) => email.trim()),
           subject: `New message from "${input.name}" <${input.email}>`,
           reply_to: input.email,
           text: input.message,
