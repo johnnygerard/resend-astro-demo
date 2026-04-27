@@ -385,22 +385,17 @@ const inputStyles = tw(
 
         if (isInputError(error)) {
           const {
-            "cf-turnstile-response": cfTurnstileResponse,
             name,
             email,
             message,
+            "cf-turnstile-response": cfTurnstileResponse,
           } = error.fields;
-
-          if (cfTurnstileResponse?.[0]) {
-            displayServerError(
-              "Security challenge failed. Please check the widget below for troubleshooting information.",
-            );
-            return;
-          }
 
           if (name?.[0]) setNameError(name.join(" "));
           if (email?.[0]) setEmailError(email.join(" "));
           if (message?.[0]) setMessageError(message.join(" "));
+          if (cfTurnstileResponse?.[0])
+            displayServerError(cfTurnstileResponse.join(" "));
 
           // Focus the first invalid field
           if (name?.[0]) nameInput.focus();
