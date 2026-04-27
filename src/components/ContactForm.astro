@@ -325,7 +325,6 @@ const inputStyles = tw(
       form.reset();
       form.inert = false;
       hide(successMessage);
-      window.turnstile?.reset("#contact-turnstile");
     });
 
     const nameInput = assertInstanceOf(
@@ -414,6 +413,7 @@ const inputStyles = tw(
         );
       } finally {
         setSubmitState("idle");
+        window.turnstile?.reset("#contact-turnstile");
       }
     });
   } catch (error) {
