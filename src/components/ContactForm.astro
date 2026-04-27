@@ -363,8 +363,8 @@ const inputStyles = tw(
 
     form.addEventListener("submit", async (event): Promise<void> => {
       event.preventDefault();
-      if (!form.checkValidity()) return; // Prevent invalid submissions
       if (submitButton.dataset.state === "pending") return; // Prevent duplicate submissions
+      if (!form.checkValidity()) return; // Prevent invalid submissions
 
       try {
         setSubmitState("pending");
