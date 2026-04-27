@@ -251,7 +251,12 @@ const inputStyles = tw(
   import type { z } from "zod/mini";
   import { assertInstanceOf } from "~/utils/assert-instance-of";
   import { assertNotNull } from "~/utils/assert-not-null";
-  import { emailSchema, messageSchema, nameSchema } from "~/validation/schemas";
+  import {
+    emailSchema,
+    messageSchema,
+    nameSchema,
+    turnstileResponseSchema,
+  } from "~/validation/schemas";
 
   const getErrorSetter = (
     errorElement: HTMLElement,
@@ -364,6 +369,16 @@ const inputStyles = tw(
       event.preventDefault();
       if (submitButton.dataset.state === "pending") return; // Prevent duplicate submissions
       if (!form.checkValidity()) return; // Prevent invalid submissions
+
+      // Do not submit the form without the Turnstile verification token.
+      const { error: turnstileError } = turnstileResponseSchema.safeParse(
+        window.turnstile?.getResponse("#contact-turnstile"),
+      );
+
+      if (turnstileError?.issues[0]) {
+        displayServerError(turnstileError.issues[0].message);
+        return;
+      }
 
       try {
         setSubmitState("pending");
