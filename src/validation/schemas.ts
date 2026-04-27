@@ -32,5 +32,5 @@ export const messageSchema = getRequiredSchema("Please enter a message.").check(
 );
 
 export const turnstileResponseSchema = z.string(
-  "Security challenge failed. Please check the widget below for troubleshooting information.",
+  "Security challenge failed. Please select the checkbox below or wait for verification.",
 );
