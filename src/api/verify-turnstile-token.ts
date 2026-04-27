@@ -61,10 +61,12 @@ export const verifyTurnstileToken = async (
     throw new Error("Fetch request to Siteverify API failed.", { cause: e });
   }
 
-  if (!response.ok)
+  if (!response.ok) {
+    await response.body?.cancel();
     throw new Error(
       `Siteverify API request failed with status: ${response.status} ${response.statusText}`,
     );
+  }
 
   const siteverifyResult = await parseAndValidateJsonBody(
     response,

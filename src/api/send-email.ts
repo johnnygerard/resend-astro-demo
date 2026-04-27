@@ -60,7 +60,10 @@ export const sendEmail = async (body: {
     throw new Error("Fetch request to Resend API failed.", { cause: e });
   }
 
-  if (response.ok) return;
+  if (response.ok) {
+    await response.body?.cancel();
+    return;
+  }
 
   const error = await parseAndValidateJsonBody(
     response,
