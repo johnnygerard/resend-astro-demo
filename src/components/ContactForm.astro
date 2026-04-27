@@ -145,9 +145,7 @@ const inputStyles = tw(
           className="size-5 shrink-0"
           weight="fill"
         />
-        <p id="contact-server-error-message">
-          Something went wrong. Please try again later.
-        </p>
+        <p class="min-h-lh" id="contact-server-error-message"></p>
       </div>
 
       <div class="space-y-5">
@@ -253,7 +251,12 @@ const inputStyles = tw(
   import type { z } from "zod/mini";
   import { assertInstanceOf } from "~/utils/assert-instance-of";
   import { assertNotNull } from "~/utils/assert-not-null";
-  import { emailSchema, messageSchema, nameSchema } from "~/validation/schemas";
+  import {
+    emailSchema,
+    messageSchema,
+    nameSchema,
+    turnstileResponseSchema,
+  } from "~/validation/schemas";
 
   const getErrorSetter = (
     errorElement: HTMLElement,
@@ -365,8 +368,20 @@ const inputStyles = tw(
 
     form.addEventListener("submit", async (event): Promise<void> => {
       event.preventDefault();
-      if (!form.checkValidity()) return; // Prevent invalid submissions
       if (submitButton.dataset.state === "pending") return; // Prevent duplicate submissions
+      if (!form.checkValidity()) return; // Prevent invalid submissions
+
+      // Do not submit the form without the Turnstile verification token.
+      const { error: turnstileError } = turnstileResponseSchema.safeParse(
+        window.turnstile?.getResponse("#contact-turnstile"),
+      );
+
+      if (turnstileError?.issues[0]) {
+        displayServerError(turnstileError.issues[0].message);
+        return;
+      }
+
+      let isSubmissionSuccessful = false;
 
       try {
         setSubmitState("pending");
@@ -379,6 +394,8 @@ const inputStyles = tw(
         ]);
 
         if (!error) {
+          isSubmissionSuccessful = true;
+          serverErrorMessage.textContent = "";
           show(successMessage);
           form.inert = true;
           return;
@@ -386,20 +403,17 @@ const inputStyles = tw(
 
         if (isInputError(error)) {
           const {
-            "cf-turnstile-response": cfTurnstileResponse,
             name,
             email,
             message,
+            "cf-turnstile-response": cfTurnstileResponse,
           } = error.fields;
-
-          if (cfTurnstileResponse?.[0]) {
-            displayServerError("Security challenge failed. Please try again.");
-            return;
-          }
 
           if (name?.[0]) setNameError(name.join(" "));
           if (email?.[0]) setEmailError(email.join(" "));
           if (message?.[0]) setMessageError(message.join(" "));
+          if (cfTurnstileResponse?.[0])
+            displayServerError(cfTurnstileResponse.join(" "));
 
           // Focus the first invalid field
           if (name?.[0]) nameInput.focus();
@@ -418,6 +432,8 @@ const inputStyles = tw(
         );
       } finally {
         setSubmitState("idle");
+        if (!isSubmissionSuccessful)
+          window.turnstile?.reset("#contact-turnstile");
       }
     });
   } catch (error) {

@@ -4,7 +4,12 @@ import { rateLimitGlobally, rateLimitUser } from "~/api/rate-limit";
 import { sendEmail } from "~/api/send-email";
 import { verifyTurnstileToken } from "~/api/verify-turnstile-token";
 import { runtimeEnv } from "~/runtime-env";
-import { emailSchema, messageSchema, nameSchema } from "~/validation/schemas";
+import {
+  emailSchema,
+  messageSchema,
+  nameSchema,
+  turnstileResponseSchema,
+} from "~/validation/schemas";
 
 export const server = {
   submitContactForm: defineAction({
@@ -14,7 +19,7 @@ export const server = {
       name: nameSchema,
       email: emailSchema,
       message: messageSchema,
-      "cf-turnstile-response": z.string().check(z.minLength(1)),
+      "cf-turnstile-response": turnstileResponseSchema,
     }),
     handler: async (input, context): Promise<void> => {
       try {

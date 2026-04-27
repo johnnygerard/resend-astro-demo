@@ -30,3 +30,7 @@ export const messageSchema = getRequiredSchema("Please enter a message.").check(
   getMinLengthSchema(MESSAGE_MIN_LENGTH, "Message"),
   getMaxLengthSchema(MESSAGE_MAX_LENGTH, "Message"),
 );
+
+export const turnstileResponseSchema = z.string(
+  "Security challenge failed. Please select the checkbox below or wait for verification.",
+);
