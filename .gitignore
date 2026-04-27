@@ -9,9 +9,6 @@
 
 # Wrangler
 /.wrangler/
-# https://developers.cloudflare.com/workers/configuration/environment-variables/#local-development-with-secrets
-/.dev.vars*
-!.dev.vars.example
 
 # Playwright
 /blob-report/

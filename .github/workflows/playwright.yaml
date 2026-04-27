@@ -21,12 +21,12 @@ jobs:
 
       - name: Create environment file for runtime variables
         run: |
-          echo "CF_TURNSTILE_SECRET_KEY=${{ vars.CF_TURNSTILE_SECRET_KEY }}" >> .dev.vars
-          echo "EMAIL_RECIPIENT=${{ vars.EMAIL_RECIPIENT }}" >> .dev.vars
-          echo "EMAIL_SENDER=${{ vars.EMAIL_SENDER }}" >> .dev.vars
-          echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" >> .dev.vars
-          echo "UPSTASH_REDIS_REST_URL=${{ secrets.UPSTASH_REDIS_REST_URL }}" >> .dev.vars
-          echo "UPSTASH_REDIS_REST_TOKEN=${{ secrets.UPSTASH_REDIS_REST_TOKEN }}" >> .dev.vars
+          echo "CF_TURNSTILE_SECRET_KEY=${{ vars.CF_TURNSTILE_SECRET_KEY }}" >> .env.local
+          echo "EMAIL_RECIPIENT=${{ vars.EMAIL_RECIPIENT }}" >> .env.local
+          echo "EMAIL_SENDER=${{ vars.EMAIL_SENDER }}" >> .env.local
+          echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" >> .env.local
+          echo "UPSTASH_REDIS_REST_TOKEN=${{ secrets.UPSTASH_REDIS_REST_TOKEN }}" >> .env.local
+          echo "UPSTASH_REDIS_REST_URL=${{ secrets.UPSTASH_REDIS_REST_URL }}" >> .env.local
 
       - name: Build project
         run: npm run build:test
