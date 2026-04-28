@@ -1,4 +1,5 @@
 import { ActionError, defineAction } from "astro:actions";
+import { EMAIL_SENDER } from "astro:env/server";
 import { z } from "zod/mini";
 import { rateLimitGlobally, rateLimitUser } from "~/api/rate-limit";
 import { sendEmail } from "~/api/send-email";
@@ -40,7 +41,7 @@ export const server = {
         await rateLimitGlobally();
 
         await sendEmail({
-          from: getRuntimeEnv().EMAIL_SENDER,
+          from: EMAIL_SENDER,
           to: getRuntimeEnv()
             .EMAIL_RECIPIENT.split(",")
             .map((email) => email.trim()),

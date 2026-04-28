@@ -13,6 +13,10 @@ export default defineConfig({
   // This environment configuration is only used for build time variables.
   env: {
     schema: {
+      EMAIL_SENDER: envField.string({
+        access: "public",
+        context: "server",
+      }),
       TURNSTILE_SITEKEY: envField.string({
         access: "public",
         context: "client",
