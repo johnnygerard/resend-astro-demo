@@ -9,7 +9,6 @@ export const getRuntimeEnv = lazy(() =>
   z
     .looseObject({
       EMAIL_RECIPIENT: schema("EMAIL_RECIPIENT"),
-      EMAIL_SENDER: schema("EMAIL_SENDER"),
       RESEND_API_KEY: schema("RESEND_API_KEY"),
       TURNSTILE_SECRET_KEY: schema("TURNSTILE_SECRET_KEY"),
       UPSTASH_REDIS_REST_TOKEN: schema("UPSTASH_REDIS_REST_TOKEN"),

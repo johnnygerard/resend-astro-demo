@@ -17,15 +17,16 @@ export const parseAndValidateJsonBody = async <T extends z.ZodMiniType>(
 
   try {
     value = await response.json();
-  } catch (e) {
+  } catch (error) {
     throw new Error(`Failed to parse JSON payload from ${apiName} response`, {
-      cause: e,
+      // eslint-disable-next-line preserve-caught-error
+      cause: { error, text: await response.text() },
     });
   }
 
   const { success, data, error } = schema.safeParse(value);
   if (success) return data;
   throw new Error(`Invalid JSON payload from ${apiName} response`, {
-    cause: error,
+    cause: { error, value },
   });
 };
